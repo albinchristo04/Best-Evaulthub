@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 
 export interface Props {
   title: string;
@@ -65,8 +66,7 @@ const fullTitle = `${title} | Deportes en Vivo`;
       rel="stylesheet"
     />
 
-    <!-- Global CSS -->
-    <link rel="stylesheet" href="/styles/global.css" />
+    <!-- Global CSS injected via Astro import in frontmatter -->
 
     <!-- JSON-LD Structured Data -->
     {jsonLd && (
