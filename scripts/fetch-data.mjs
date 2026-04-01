@@ -141,7 +141,7 @@ async function fetchS1() {
       const channels = (ev.channels ?? []).map((ch, idx) => ({
         name: `Canal ${idx + 1}`,
         lang: ch.lang ?? 'es',
-        embedUrl: `https://cartelive.club/vip3.php/player/${ch.id}/1`,
+        embedUrl: `https://cartelive.club/player/${ch.id}/1`,
       }));
 
       results.push({
