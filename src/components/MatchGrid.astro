@@ -32,7 +32,7 @@ const categories = [...new Set(matches.map((m) => m.category))].sort();
   {matches.length > 0 ? (
     <div class="match-grid">
       {matches.map((match) => (
-        <MatchCard match={match} serverNum={serverNum} />
+        <MatchCard {...match} serverNum={serverNum} />
       ))}
     </div>
   ) : (
