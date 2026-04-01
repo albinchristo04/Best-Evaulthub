@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Deportes en Vivo Hoy - Fútbol, NBA, MLB en Vivo";
+const description = "Ver deportes en vivo gratis. Fútbol, NBA, MLB y más en streaming HD. Partidos de hoy en directo.";
+const keywords = "deportes en vivo, fútbol en vivo, NBA en vivo, MLB en vivo, partidos en vivo hoy, ver deportes gratis";
+
+const faqItems = [
+  {
+    question: "¿Cómo puedo ver deportes en vivo gratis en deportesenvivo.live?",
+    answer: "Es muy sencillo. Entra al sitio, selecciona el partido que quieres ver y haz clic en 'Ver en vivo'. No necesitas registrarte ni pagar nada. Tenemos tres servidores distintos para garantizar que siempre encuentres una transmisión disponible.",
+  },
+  {
+    question: "¿Qué deportes puedo ver en este sitio?",
+    answer: "En deportesenvivo.live encontrarás fútbol en vivo (ligas europeas, Champions League, partidos internacionales), NBA, MLB, tenis, cricket, hockey, boxeo, MMA y mucho más. Actualizamos los partidos cada 30 minutos.",
+  },
+  {
+    question: "¿Por qué hay tres servidores diferentes?",
+    answer: "Cada servidor provee distintas fuentes de transmisión. Si uno tiene problemas o está lento, puedes cambiar fácilmente a Servidor 2 o Servidor 3 con un solo clic. Así siempre tendrás opciones disponibles para ver tu partido favorito.",
+  },
+  {
+    question: "¿Necesito instalar alguna aplicación o plugin?",
+    answer: "No. deportesenvivo.live funciona directamente en tu navegador, tanto en computadora como en móvil o tablet. No necesitas instalar nada. Solo abre el sitio y empieza a ver.",
+  },
+  {
+    question: "¿Los partidos se actualizan automáticamente?",
+    answer: "Sí. Nuestro sistema obtiene los datos de los partidos del día automáticamente. La programación se actualiza cada 30 minutos, por lo que siempre verás los partidos más recientes disponibles para hoy.",
+  },
+];
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Deportes en Vivo",
+  "url": "https://deportesenvivo.live",
+  "description": description,
+  "inLanguage": "es",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://deportesenvivo.live/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/"
+  pageType="home"
+  jsonLd={websiteJsonLd}
+>
+  <div class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Deportes en Vivo Hoy &mdash; Partidos de <span>Fútbol</span>, NBA, MLB en Vivo</h1>
+      <p>Ver deportes en vivo gratis y sin registro. Fútbol, NBA, MLB y más en streaming HD.</p>
+    </section>
+
+    <!-- Server Tabs -->
+    <ServerTabs activeServer={1} />
+
+    <!-- Server 1 content (visible by default) -->
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches} serverNum={1} />
+    </div>
+
+    <!-- Server 2 content (hidden) -->
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={s2Matches} serverNum={2} />
+    </div>
+
+    <!-- Server 3 content (hidden) -->
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={s3Matches} serverNum={3} />
+    </div>
+
+    <!-- SEO Content Block -->
+    <div class="seo-content">
+      <h2>Ver Deportes en Vivo Online Gratis</h2>
+      <p>
+        Bienvenido a <strong>deportesenvivo.live</strong>, tu destino número uno para ver <strong>deportes en vivo</strong> completamente gratis y sin necesidad de registro. Aquí encontrarás transmisiones en directo de los mejores partidos de <strong>fútbol en vivo</strong>, incluyendo la Liga española, Premier League, Champions League, Liga MX y todos los grandes torneos internacionales. También cubrimos la <strong>NBA en vivo</strong>, <strong>MLB en vivo</strong>, tenis, boxeo, MMA y mucho más.
+      </p>
+      <p>
+        Nuestro sistema de tres servidores garantiza que siempre tengas acceso a las mejores transmisiones disponibles. Si un servidor falla o está lento, simplemente cambia al siguiente con un clic. Todos los <strong>partidos de hoy</strong> se muestran en tiempo real con indicador de estado EN VIVO para que nunca te pierdas un momento del juego. Las horas se muestran automáticamente en tu zona horaria local.
+      </p>
+      <p>
+        ¿Buscas alternativas? Visita nuestras páginas de <a href="/futbol-libre">Fútbol Libre</a>, <a href="/pirlo-tv">Pirlo TV</a>, <a href="/tarjeta-roja">Tarjeta Roja</a> o <a href="/roja-directa">Roja Directa</a> para acceder a los partidos desde distintas fuentes. También puedes compartir el calendario deportivo de hoy con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> para WhatsApp y Telegram.
+      </p>
+    </div>
+
+    <!-- FAQ -->
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+/**
+ * Player.astro
+ * Sandboxed iframe player for source streams.
+ * sandbox blocks window.open() / popups from the source stream.
+ *
+ * Props:
+ *   embedUrl — the iframe src URL
+ *   title    — accessible title for the iframe
+ */
+
+export interface Props {
+  embedUrl: string;
+  title: string;
+}
+
+const { embedUrl, title } = Astro.props;
+---
+
+<div class="player-container" role="region" aria-label={`Reproductor: ${title}`}>
+  <iframe
+    src={embedUrl}
+    sandbox="allow-scripts allow-same-origin"
+    allow="encrypted-media; autoplay"
+    allowfullscreen
+    style="width:100%;height:100%;border:none;"
+    title={title}
+    loading="lazy"
+  ></iframe>
+</div>
+
+<style>
+  /* .player-container is defined globally in global.css (aspect-ratio: 16/9) */
+  /* Extra styles here for specificity */
+  .player-container {
+    position: relative;
+    background: #000;
+  }
+
+  .player-container iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

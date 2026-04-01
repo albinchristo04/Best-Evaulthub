@@ -1,0 +1,60 @@
+---
+/**
+ * MatchGrid.astro
+ * Renders CategoryFilter + a grid of MatchCard components.
+ *
+ * Props:
+ *   matches     — array of normalized match objects
+ *   serverNum   — 1 | 2 | 3
+ *   showFilters — whether to render category filter pills (default true)
+ */
+
+import MatchCard from './MatchCard.astro';
+import CategoryFilter from './CategoryFilter.astro';
+
+export interface Props {
+  matches: any[];
+  serverNum: 1 | 2 | 3;
+  showFilters?: boolean;
+}
+
+const { matches, serverNum, showFilters = true } = Astro.props;
+
+// Collect unique categories present in this server's data
+const categories = [...new Set(matches.map((m) => m.category))].sort();
+---
+
+<div data-server={serverNum}>
+  {showFilters && categories.length > 1 && (
+    <CategoryFilter categories={categories} />
+  )}
+
+  {matches.length > 0 ? (
+    <div class="match-grid">
+      {matches.map((match) => (
+        <MatchCard match={match} serverNum={serverNum} />
+      ))}
+    </div>
+  ) : (
+    <div class="no-matches">
+      <p>No hay partidos disponibles para este servidor en este momento.</p>
+      <p>Prueba otro servidor o vuelve más tarde.</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .no-matches {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+
+  .no-matches p + p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+</style>

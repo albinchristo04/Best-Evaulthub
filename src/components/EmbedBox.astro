@@ -1,0 +1,120 @@
+---
+/**
+ * EmbedBox.astro
+ * Shows a copyable embed code snippet for webmasters.
+ *
+ * Props:
+ *   slug         — match slug
+ *   serverNum    — 1 | 2 | 3 (default 1)
+ *   channelIndex — channel index (default 0)
+ */
+
+export interface Props {
+  slug: string;
+  serverNum?: number;
+  channelIndex?: number;
+}
+
+const { slug, serverNum = 1, channelIndex = 0 } = Astro.props;
+
+const embedUrl = `https://deportesenvivo.live/embed/${slug}?s=${serverNum}&ch=${channelIndex}`;
+const embedCode = `<iframe src="${embedUrl}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>`;
+---
+
+<section class="embed-box" aria-labelledby="embed-heading">
+  <h3 id="embed-heading" class="embed-title">Incrustar en tu sitio</h3>
+  <p class="embed-desc">Copia este código y pégalo en tu web para compartir el partido:</p>
+
+  <div class="embed-code-wrap">
+    <pre class="embed-code" id="embedCode" aria-label="Código de incrustación">{embedCode}</pre>
+    <button
+      class="btn btn-outline embed-copy-btn"
+      id="embedCopyBtn"
+      aria-label="Copiar código de incrustación"
+      data-code={embedCode}
+    >
+      Copiar
+    </button>
+  </div>
+</section>
+
+<style>
+  .embed-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .embed-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+  }
+
+  .embed-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.875rem;
+  }
+
+  .embed-code-wrap {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .embed-code {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    background: #0a0a0f;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--accent);
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .embed-copy-btn {
+    flex-shrink: 0;
+    align-self: stretch;
+    padding: 0.5rem 1rem;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('embedCopyBtn') as HTMLButtonElement | null;
+
+  btn?.addEventListener('click', async () => {
+    const code = btn.dataset.code ?? '';
+    try {
+      await navigator.clipboard.writeText(code);
+      const original = btn.textContent;
+      btn.textContent = '¡Copiado!';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 2000);
+    } catch {
+      // Fallback for browsers without clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '¡Copiado!';
+    }
+  });
+</script>

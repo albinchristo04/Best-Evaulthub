@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Roja Directa Online - Fútbol y Deportes en Vivo";
+const description = "Roja Directa en línea. Ver fútbol y deportes en vivo gratis hoy.";
+const keywords = "roja directa, rojadirecta, roja directa online, roja directa fútbol, ver roja directa";
+
+const faqItems = [
+  {
+    question: "¿Qué es Roja Directa?",
+    answer: "Roja Directa (también conocida como Rojadirecta) es uno de los directorios de streaming deportivo más antiguos y conocidos de internet. Indexa enlaces a transmisiones en vivo de fútbol y otros deportes. En deportesenvivo.live ofrecemos una alternativa directa con streams integrados.",
+  },
+  {
+    question: "¿Roja Directa sigue funcionando en 2026?",
+    answer: "Rojadirecta ha tenido problemas legales en varios países y cambia de dominio con frecuencia. deportesenvivo.live es una alternativa estable con tres servidores propios, por lo que siempre tendrás acceso a los partidos sin preocuparte por cambios de URL.",
+  },
+  {
+    question: "¿Cómo entrar a Roja Directa online sin problemas?",
+    answer: "La forma más sencilla es usar deportesenvivo.live, donde tendrás acceso inmediato a todos los partidos del día sin necesidad de buscar el dominio actual de Rojadirecta. Simplemente entra al sitio, selecciona el partido y empieza a ver.",
+  },
+  {
+    question: "¿Puedo ver LaLiga en Roja Directa?",
+    answer: "Sí. En deportesenvivo.live encontrarás transmisiones de LaLiga, Premier League, Champions League, Copa del Rey y todas las competiciones de fútbol importantes. La cartelera incluye también NBA, MLB, tenis y otros deportes.",
+  },
+  {
+    question: "¿Roja Directa tiene app móvil?",
+    answer: "deportesenvivo.live funciona perfectamente desde el navegador móvil sin necesidad de ninguna app. Es la solución más sencilla para ver fútbol en vivo en tu teléfono, sea Android o iPhone.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/roja-directa"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Roja Directa</h1>
+      <p class="subtitle">Ver fútbol y deportes en vivo gratis — alternativa a Rojadirecta online</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={s2Matches} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={s3Matches} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Roja Directa — El Mejor Directorio de Deportes en Vivo</h2>
+      <p>
+        <strong>Roja Directa</strong> es sinónimo de streaming deportivo gratuito en internet. Si buscas <strong>Rojadirecta online</strong> para ver los partidos de hoy, deportesenvivo.live es tu mejor alternativa: acceso inmediato a transmisiones en vivo de fútbol, baloncesto, béisbol y más, sin necesidad de buscar el dominio actualizado de Rojadirecta. Todo en un solo lugar, actualizado automáticamente cada 30 minutos.
+      </p>
+      <p>
+        Nuestra plataforma ofrece tres servidores distintos para que siempre encuentres una transmisión funcionando. Si <strong>ver Roja Directa</strong> en el servidor principal falla, cambia fácilmente al Servidor 2 o al Servidor 3. La programación incluye todos los grandes campeonatos de <strong>fútbol en vivo</strong>: LaLiga, Champions League, Premier League, Serie A, Bundesliga y los partidos de selecciones nacionales.
+      </p>
+      <p>
+        Además del fútbol, en deportesenvivo.live encontrarás NBA en vivo, MLB, tenis Grand Slam, boxeo y mucho más. Explora también <a href="/rojadirecta-tv">Rojadirecta TV</a>, <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>, <a href="/tarjeta-roja">Tarjeta Roja</a> o <a href="/futbol-libre">Fútbol Libre</a> para más opciones de streaming gratuito.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

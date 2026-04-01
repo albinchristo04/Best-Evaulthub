@@ -1,0 +1,92 @@
+---
+/**
+ * CategoryFilter.astro
+ * Renders category filter pills. Client JS filters .match-card elements
+ * by their data-category attribute.
+ *
+ * Props:
+ *   categories     — array of category strings present in the current data
+ *   activeCategory — initially active category slug (default "all")
+ */
+
+export interface Props {
+  categories: string[];
+  activeCategory?: string;
+}
+
+const { categories, activeCategory = 'all' } = Astro.props;
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  football:   '⚽',
+  basketball: '🏀',
+  baseball:   '⚾',
+  tennis:     '🎾',
+  cricket:    '🏏',
+  hockey:     '🏒',
+  boxing:     '🥊',
+  mma:        '🥊',
+  darts:      '🎯',
+  other:      '🏆',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  football:   'Fútbol',
+  basketball: 'Basketball',
+  baseball:   'Béisbol',
+  tennis:     'Tenis',
+  cricket:    'Cricket',
+  hockey:     'Hockey',
+  boxing:     'Boxeo',
+  mma:        'MMA',
+  darts:      'Dardos',
+  other:      'Otros',
+};
+---
+
+<div class="category-filter" role="group" aria-label="Filtrar por categoría">
+  <button
+    class={`category-pill${activeCategory === 'all' ? ' active' : ''}`}
+    data-filter="all"
+    aria-pressed={activeCategory === 'all' ? 'true' : 'false'}
+  >
+    Todos
+  </button>
+
+  {categories.map((cat) => (
+    <button
+      class={`category-pill${activeCategory === cat ? ' active' : ''}`}
+      data-filter={cat}
+      aria-pressed={activeCategory === cat ? 'true' : 'false'}
+    >
+      {CATEGORY_EMOJI[cat] ?? '🏆'}&nbsp;{CATEGORY_LABELS[cat] ?? cat}
+    </button>
+  ))}
+</div>
+
+<script>
+  // Scoped to the closest .server-content-* ancestor (or document)
+  document.querySelectorAll<HTMLElement>('.category-filter').forEach((filterBar) => {
+    const scope = filterBar.closest<HTMLElement>('[data-server]') ?? document;
+
+    filterBar.querySelectorAll<HTMLButtonElement>('.category-pill').forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const filter = pill.dataset.filter ?? 'all';
+
+        // Update aria-pressed + active class within this filter bar
+        filterBar.querySelectorAll<HTMLElement>('.category-pill').forEach((p) => {
+          p.classList.toggle('active', p === pill);
+          p.setAttribute('aria-pressed', p === pill ? 'true' : 'false');
+        });
+
+        // Show / hide cards in the scoped server block
+        scope.querySelectorAll<HTMLElement>('.match-card').forEach((card) => {
+          if (filter === 'all' || card.dataset.category === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

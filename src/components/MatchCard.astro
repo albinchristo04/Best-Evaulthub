@@ -1,0 +1,155 @@
+---
+export interface Channel {
+  name: string;
+  lang: string;
+  embedUrl: string;
+}
+export interface Props {
+  id: string;
+  teams: string;
+  league: string;
+  category: string;
+  startTime: number;
+  endTime: number;
+  server: number;
+  channels: Channel[];
+  poster?: string | null;
+  viewers?: string | null;
+  defaultServer?: number;
+}
+const {
+  id, teams, league, category, startTime, endTime,
+  server, channels, poster, viewers, defaultServer = 1
+} = Astro.props;
+
+const categoryEmoji: Record<string, string> = {
+  football: '⚽', basketball: '🏀', baseball: '⚾', tennis: '🎾',
+  cricket: '🏏', hockey: '🏒', boxing: '🥊', mma: '🥊', darts: '🎯', other: '🏆'
+};
+const emoji = categoryEmoji[category] || '🏆';
+const matchUrl = `/match/${id}?s=${server}`;
+---
+<article
+  class="card match-card"
+  data-start={startTime}
+  data-end={endTime}
+  data-server={server}
+  data-category={category}
+>
+  {poster && (
+    <div class="card-poster" style={`background-image:url('${poster}')`} aria-hidden="true"></div>
+  )}
+  <div class="card-body">
+    <div class="card-meta">
+      <span class="category-badge">{emoji} {category}</span>
+      {viewers && <span class="viewers-badge">👁 {viewers}</span>}
+      <span class="server-badge">S{server}</span>
+      <!-- Live badge injected by JS -->
+      <span class="live-badge-slot" aria-live="polite"></span>
+    </div>
+    <div class="card-teams">
+      <span class="teams-text">{teams}</span>
+    </div>
+    <div class="card-league">{league || category}</div>
+    <div class="card-time">
+      <time class="match-time" data-ts={startTime}>{startTime > 0 ? new Date(startTime * 1000).toISOString() : 'En vivo'}</time>
+    </div>
+    <a href={matchUrl} class="btn btn-primary card-btn">
+      Ver en vivo →
+    </a>
+  </div>
+</article>
+
+<style>
+  .match-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .card-poster {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    background-color: #0a0a0f;
+  }
+  .card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+  .category-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-hover);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .viewers-badge {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+  .server-badge {
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: #38b2ac20;
+    border: 1px solid #38b2ac40;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .card-teams {
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .card-league {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .card-time {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .card-btn {
+    margin-top: 0.5rem;
+    align-self: flex-start;
+    font-size: 0.82rem;
+    padding: 0.4rem 1rem;
+  }
+</style>
+
+<script>
+  function updateCards() {
+    const now = Math.floor(Date.now() / 1000);
+    const fmt = new Intl.DateTimeFormat(navigator.language || 'es', {
+      hour: '2-digit', minute: '2-digit', timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    });
+    document.querySelectorAll<HTMLElement>('.match-card').forEach(card => {
+      const start = parseInt(card.dataset.start || '0');
+      const end = parseInt(card.dataset.end || '0');
+      const isLive = start > 0 && now >= start && (end === 0 || now <= end);
+      const slot = card.querySelector('.live-badge-slot');
+      if (slot) {
+        slot.innerHTML = isLive ? '<span class="live-badge">🔴 EN VIVO</span>' : '';
+      }
+      const timeEl = card.querySelector<HTMLElement>('.match-time');
+      if (timeEl && start > 0) {
+        timeEl.textContent = fmt.format(new Date(start * 1000));
+      } else if (timeEl && start === 0) {
+        timeEl.textContent = 'En vivo';
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', updateCards);
+</script>

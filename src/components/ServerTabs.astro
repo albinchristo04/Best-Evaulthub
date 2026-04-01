@@ -1,0 +1,96 @@
+---
+/**
+ * ServerTabs.astro
+ * Renders server selection tabs and handles client-side show/hide of
+ * .server-content-{n} divs.
+ *
+ * Props:
+ *   activeServer  — which tab is active by default (1 | 2 | 3)
+ *   showServers   — which server tabs to render (default [1,2,3])
+ */
+
+export interface Props {
+  activeServer?: 1 | 2 | 3;
+  showServers?: (1 | 2 | 3)[];
+}
+
+const { activeServer = 1, showServers = [1, 2, 3] } = Astro.props;
+
+const labels: Record<number, string> = {
+  1: 'Servidor 1',
+  2: 'Servidor 2',
+  3: 'Servidor 3',
+};
+---
+
+<div class="server-tabs" role="tablist" aria-label="Seleccionar servidor">
+  {showServers.map((n) => (
+    <button
+      class={`server-tab${n === activeServer ? ' active' : ''}`}
+      role="tab"
+      aria-selected={n === activeServer ? 'true' : 'false'}
+      aria-controls={`server-content-${n}`}
+      data-server={n}
+      id={`server-tab-${n}`}
+    >
+      <span class="tab-dot" aria-hidden="true"></span>
+      {labels[n]}
+    </button>
+  ))}
+</div>
+
+<style>
+  .tab-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .server-tab.active .tab-dot {
+    opacity: 1;
+    background: #fff;
+  }
+</style>
+
+<script>
+  (function initServerTabs() {
+    const tabBars = document.querySelectorAll<HTMLElement>('.server-tabs');
+
+    tabBars.forEach((bar) => {
+      const tabs = bar.querySelectorAll<HTMLButtonElement>('[data-server]');
+
+      // Hide all server panels except the active one on init
+      const activeTab = bar.querySelector<HTMLButtonElement>('.server-tab.active');
+      const activeServer = activeTab?.dataset.server ?? '1';
+
+      document.querySelectorAll<HTMLElement>('[class^="server-content-"], [class*=" server-content-"]').forEach((panel) => {
+        // Extract server number from class like "server-content-2"
+        const match = panel.className.match(/server-content-(\d)/);
+        if (match) {
+          panel.hidden = match[1] !== activeServer;
+        }
+      });
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const server = tab.dataset.server!;
+
+          // Update tab states
+          tabs.forEach((t) => {
+            t.classList.toggle('active', t === tab);
+            t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+          });
+
+          // Show/hide panels
+          document.querySelectorAll<HTMLElement>('[class*="server-content-"]').forEach((panel) => {
+            const m = panel.className.match(/server-content-(\d)/);
+            if (m) panel.hidden = m[1] !== server;
+          });
+        });
+      });
+    });
+  })();
+</script>

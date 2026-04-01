@@ -1,0 +1,3 @@
+# Replace this filename with your actual IndexNow key
+# e.g., public/abc123def456.txt containing just the key value
+abc123def456

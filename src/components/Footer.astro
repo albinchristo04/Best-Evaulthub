@@ -1,0 +1,182 @@
+---
+/**
+ * Footer.astro
+ * 4-column link grid of all 12 hub pages + copyright line.
+ */
+
+const columns = [
+  {
+    heading: 'Fútbol',
+    links: [
+      { label: 'Fútbol Libre',    href: '/futbol-libre' },
+      { label: 'Fútbol Libre TV', href: '/futbol-libre-tv' },
+      { label: 'Fútbol en Vivo',  href: '/futbol-en-vivo' },
+    ],
+  },
+  {
+    heading: 'Pirlo & Tarjeta',
+    links: [
+      { label: 'Pirlo TV',        href: '/pirlo-tv' },
+      { label: 'Tarjeta Roja',    href: '/tarjeta-roja' },
+      { label: 'Tarjeta Roja TV', href: '/tarjeta-roja-tv' },
+    ],
+  },
+  {
+    heading: 'Roja Directa',
+    links: [
+      { label: 'Roja Directa',         href: '/roja-directa' },
+      { label: 'Rojadirecta TV',        href: '/rojadirecta-tv' },
+      { label: 'Rojadirecta en Vivo',   href: '/rojadirecta-en-vivo' },
+    ],
+  },
+  {
+    heading: 'Partidos',
+    links: [
+      { label: 'Partidos de Hoy',  href: '/partidos-de-hoy' },
+      { label: 'Partidos en Vivo', href: '/partidos-en-vivo' },
+      { label: 'LiveTV',           href: '/livetv' },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <!-- Logo row -->
+    <div class="footer-brand">
+      <a href="/" class="footer-logo" aria-label="Deportes en Vivo — Inicio">
+        <span class="footer-logo-icon" aria-hidden="true">▶</span>
+        <span>deportesenvivo<span class="footer-logo-accent">.live</span></span>
+      </a>
+      <p class="footer-tagline">
+        Streaming de deportes en vivo — Fútbol, NBA, MLB y más, gratis online.
+      </p>
+    </div>
+
+    <!-- Link grid -->
+    <nav class="footer-grid" aria-label="Páginas del sitio">
+      {columns.map((col) => (
+        <div class="footer-col">
+          <h3 class="footer-heading">{col.heading}</h3>
+          <ul class="footer-links" role="list">
+            {col.links.map((link) => (
+              <li>
+                <a href={link.href} class="footer-link">{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>© {year} deportesenvivo.live — Todos los derechos reservados</p>
+      <p class="footer-disclaimer">
+        Este sitio no almacena ni transmite contenido. Todos los streams son provistos por terceros.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 3rem 0 1.5rem;
+  }
+
+  /* Brand row */
+  .footer-brand {
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-logo-icon {
+    color: var(--primary);
+  }
+
+  .footer-logo-accent {
+    color: var(--primary);
+  }
+
+  .footer-tagline {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.4rem;
+    max-width: 480px;
+  }
+
+  /* Link grid */
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .footer-heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .footer-link {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--primary);
+  }
+
+  /* Bottom bar */
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  .footer-disclaimer {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+</style>

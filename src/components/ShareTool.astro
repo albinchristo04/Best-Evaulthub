@@ -1,0 +1,228 @@
+---
+export interface MatchEntry {
+  id: string;
+  teams: string;
+  league: string;
+  category: string;
+  startTime: number;
+  endTime: number;
+  server: number;
+}
+export interface Props {
+  matches: MatchEntry[];
+}
+const { matches } = Astro.props;
+
+const categoryEmoji: Record<string,string> = {
+  football: '⚽', basketball: '🏀', baseball: '⚾', tennis: '🎾',
+  cricket: '🏏', hockey: '🏒', boxing: '🥊', mma: '🥊', darts: '🎯', other: '🏆'
+};
+const categoryLabel: Record<string,string> = {
+  football: 'FÚTBOL', basketball: 'NBA / BALONCESTO', baseball: 'MLB / BÉISBOL',
+  tennis: 'TENIS', cricket: 'CRICKET', hockey: 'HOCKEY', boxing: 'BOXEO',
+  mma: 'MMA', darts: 'DARDOS', other: 'OTROS DEPORTES'
+};
+
+const seen = new Set();
+const uniqueMatches = matches.filter(m => {
+  if (seen.has(m.id)) return false;
+  seen.add(m.id);
+  return true;
+});
+
+const groups: Record<string, typeof uniqueMatches> = {};
+uniqueMatches.forEach(m => {
+  if (!groups[m.category]) groups[m.category] = [];
+  groups[m.category].push(m);
+});
+const sortedCategories = Object.keys(groups).sort();
+
+const today = new Date();
+const dateStr = today.toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric' });
+---
+
+<div class="share-tool" id="share-tool">
+  <div class="share-toolbar">
+    <button class="btn btn-primary" id="copy-all-btn">Copiar Todo</button>
+    <button class="btn btn-outline" id="select-all-btn">Seleccionar todo</button>
+    <button class="btn btn-outline" id="deselect-all-btn">Deseleccionar todo</button>
+  </div>
+
+  <div class="share-preview" id="share-preview"></div>
+
+  {sortedCategories.map(cat => (
+    <div class="share-category" data-category={cat}>
+      <div class="share-cat-header">
+        <span class="share-cat-title">{categoryEmoji[cat] || '🏆'} {categoryLabel[cat] || cat.toUpperCase()}</span>
+        <button class="btn btn-outline btn-sm copy-cat-btn" data-category={cat}>
+          Copiar {categoryLabel[cat] || cat}
+        </button>
+      </div>
+      <div class="share-matches">
+        {groups[cat].map(m => (
+          <label class="share-match-item">
+            <input
+              type="checkbox"
+              class="match-checkbox"
+              data-id={m.id}
+              data-teams={m.teams}
+              data-start={m.startTime}
+              data-category={cat}
+              checked
+            />
+            <div class="share-match-info">
+              <span class="share-match-time" data-ts={m.startTime}>
+                {m.startTime > 0 ? new Date(m.startTime * 1000).toISOString() : '--:--'}
+              </span>
+              <span class="share-match-teams">{m.teams}</span>
+            </div>
+          </label>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .share-tool { display: flex; flex-direction: column; gap: 1.5rem; }
+  .share-toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .share-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    min-height: 60px;
+    line-height: 1.6;
+  }
+  .share-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .share-cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .share-cat-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .btn-sm { font-size: 0.75rem; padding: 0.3rem 0.75rem; }
+  .share-matches { display: flex; flex-direction: column; }
+  .share-match-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .share-match-item:last-child { border-bottom: none; }
+  .share-match-item:hover { background: var(--surface-hover); }
+  .match-checkbox {
+    width: 16px; height: 16px;
+    accent-color: var(--primary);
+    flex-shrink: 0; cursor: pointer;
+  }
+  .share-match-info { display: flex; gap: 0.75rem; align-items: baseline; flex-wrap: wrap; }
+  .share-match-time {
+    font-size: 0.8rem; color: var(--accent);
+    font-variant-numeric: tabular-nums; min-width: 45px;
+  }
+  .share-match-teams { font-size: 0.88rem; color: var(--text); font-weight: 600; }
+</style>
+
+<script define:vars={{ dateStr, categoryEmoji, categoryLabel }}>
+  var BASE = 'https://deportesenvivo.live';
+  var fmt = new Intl.DateTimeFormat(navigator.language || 'es', {
+    hour: '2-digit', minute: '2-digit',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  });
+
+  function localTime(ts) {
+    return ts > 0 ? fmt.format(new Date(ts * 1000)) : '--:--';
+  }
+
+  document.querySelectorAll('.share-match-time[data-ts]').forEach(function(el) {
+    var ts = parseInt(el.dataset.ts || '0');
+    el.textContent = localTime(ts);
+  });
+
+  function buildText(checkboxes) {
+    var grps = {};
+    checkboxes.forEach(function(cb) {
+      if (!cb.checked) return;
+      var cat = cb.dataset.category;
+      if (!grps[cat]) grps[cat] = [];
+      grps[cat].push(cb);
+    });
+    var text = 'DEPORTES EN VIVO - ' + dateStr + '\n' + BASE + '\n';
+    Object.keys(grps).sort().forEach(function(cat) {
+      var emoji = categoryEmoji[cat] || '';
+      var label = categoryLabel[cat] || cat.toUpperCase();
+      text += '\n' + emoji + ' ' + label + '\n';
+      grps[cat].forEach(function(cb) {
+        var ts = parseInt(cb.dataset.start || '0');
+        var time = localTime(ts);
+        var teams = cb.dataset.teams || '';
+        var id = cb.dataset.id || '';
+        text += '- ' + time + ' ' + teams + '\n  ' + BASE + '/match/' + id + '\n\n';
+      });
+    });
+    text += 'Ver todos: ' + BASE;
+    return text;
+  }
+
+  function updatePreview() {
+    var all = Array.from(document.querySelectorAll('.match-checkbox'));
+    var el = document.getElementById('share-preview');
+    if (el) el.textContent = buildText(all);
+  }
+
+  document.addEventListener('DOMContentLoaded', updatePreview);
+  document.querySelectorAll('.match-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', updatePreview);
+  });
+
+  var selectAllBtn = document.getElementById('select-all-btn');
+  var deselectAllBtn = document.getElementById('deselect-all-btn');
+  var copyAllBtn = document.getElementById('copy-all-btn');
+
+  if (selectAllBtn) selectAllBtn.addEventListener('click', function() {
+    document.querySelectorAll('.match-checkbox').forEach(function(cb) { cb.checked = true; });
+    updatePreview();
+  });
+  if (deselectAllBtn) deselectAllBtn.addEventListener('click', function() {
+    document.querySelectorAll('.match-checkbox').forEach(function(cb) { cb.checked = false; });
+    updatePreview();
+  });
+  if (copyAllBtn) copyAllBtn.addEventListener('click', function() {
+    var all = Array.from(document.querySelectorAll('.match-checkbox'));
+    var text = buildText(all);
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = copyAllBtn.textContent;
+      copyAllBtn.textContent = 'Copiado!';
+      setTimeout(function() { copyAllBtn.textContent = orig; }, 2500);
+    }).catch(function() {});
+  });
+  document.querySelectorAll('.copy-cat-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var cat = btn.dataset.category;
+      var cbs = Array.from(document.querySelectorAll('.match-checkbox[data-category="' + cat + '"]'));
+      var text = buildText(cbs);
+      navigator.clipboard.writeText(text).then(function() {
+        var orig = btn.textContent;
+        btn.textContent = 'Copiado';
+        setTimeout(function() { btn.textContent = orig; }, 2000);
+      }).catch(function() {});
+    });
+  });
+</script>

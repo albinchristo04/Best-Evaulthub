@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Fútbol Libre - Ver Fútbol Gratis Online en Vivo";
+const description = "Ver fútbol libre online gratis. Partidos en vivo hoy. Fútbol libre TV sin cortes.";
+const keywords = "fútbol libre, fútbol libre tv, ver fútbol libre, fútbol libre online, fútbol libre gratis";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Qué es Fútbol Libre y cómo funciona?",
+    answer: "Fútbol Libre es un término popular para referirse a sitios web que ofrecen transmisiones de partidos de fútbol de forma gratuita y sin suscripción. En deportesenvivo.live ofrecemos exactamente eso: ver fútbol libre online sin registro, sin pagos y sin descargar ninguna aplicación.",
+  },
+  {
+    question: "¿Qué partidos puedo ver gratis en Fútbol Libre?",
+    answer: "Puedes ver partidos de la Liga española (LaLiga), Premier League inglesa, Serie A italiana, Bundesliga alemana, Ligue 1 francesa, Champions League, Europa League, Copa del Rey, partidos de selecciones nacionales y mucho más. La programación se actualiza diariamente.",
+  },
+  {
+    question: "¿Es seguro ver fútbol libre online?",
+    answer: "Sí. En deportesenvivo.live no necesitas instalar ningún programa ni dar datos personales. Simplemente abre el sitio en tu navegador y elige el partido. No almacenamos información personal de los usuarios.",
+  },
+  {
+    question: "¿Puedo ver fútbol libre en mi celular?",
+    answer: "Por supuesto. El sitio está completamente optimizado para dispositivos móviles. Puedes ver fútbol libre en tu teléfono Android o iPhone simplemente abriendo deportesenvivo.live en tu navegador móvil, sin necesidad de apps.",
+  },
+  {
+    question: "¿Qué hago si el stream de fútbol libre no carga?",
+    answer: "Si un servidor no funciona, prueba cambiando al Servidor 2 o Servidor 3 haciendo clic en las pestañas de arriba. También puedes intentar recargar la página o limpiar la caché de tu navegador. Si el problema persiste, vuelve en unos minutos ya que los streams se actualizan continuamente.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/futbol-libre"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Fútbol Libre</h1>
+      <p class="subtitle">Ver fútbol gratis online en vivo — partidos de hoy sin registro ni pago</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Fútbol Libre Online — La Mejor Alternativa Gratis</h2>
+      <p>
+        <strong>Fútbol libre</strong> es la forma más popular de ver partidos de fútbol en internet sin pagar una suscripción. En deportesenvivo.live te ofrecemos acceso gratuito a las mejores transmisiones de <strong>fútbol en vivo</strong> de todo el mundo. Desde los partidos de LaLiga hasta la Champions League, pasando por la Copa Libertadores y los partidos de tu selección nacional, aquí lo tienes todo en un solo lugar. Nuestra plataforma de <strong>fútbol libre TV</strong> funciona directamente en el navegador, sin necesidad de descargar aplicaciones ni plugins.
+      </p>
+      <p>
+        Para <strong>ver fútbol libre gratis</strong>, simplemente selecciona el partido que quieres seguir y elige entre los distintos servidores disponibles. Si experimentas problemas con la calidad de imagen, cambia al siguiente servidor con un clic. Todos los horarios se muestran automáticamente en tu zona horaria local para que nunca te pierdas el inicio de un partido. También puedes visitar nuestras páginas de <a href="/pirlo-tv">Pirlo TV</a>, <a href="/tarjeta-roja">Tarjeta Roja</a> o <a href="/roja-directa">Roja Directa</a> para más opciones de streaming de fútbol.
+      </p>
+      <p>
+        El <strong>fútbol libre online</strong> en deportesenvivo.live se actualiza cada 30 minutos con los partidos más recientes. Tanto si quieres ver el clásico de fin de semana, un partido de Champions League entre semana o un duelo de selecciones nacionales, aquí encontrarás siempre la transmisión disponible. Usa nuestra <a href="/compartir">herramienta de compartir</a> para enviar los partidos del día a tus amigos por WhatsApp o Telegram.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

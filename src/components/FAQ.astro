@@ -1,0 +1,140 @@
+---
+/**
+ * FAQ.astro
+ * Props: items — array of { question: string, answer: string }
+ * Renders CSS-only accordion using <details>/<summary> + FAQPage JSON-LD.
+ */
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface Props {
+  items: FAQItem[];
+}
+
+const { items } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<section class="faq-section" aria-labelledby="faq-heading">
+  <h2 id="faq-heading" class="faq-title">Preguntas Frecuentes</h2>
+
+  <div class="faq-list">
+    {items.map((item, index) => (
+      <details class="faq-item" name="faq">
+        <summary class="faq-question" id={`faq-q-${index}`}>
+          <span class="faq-question-text">{item.question}</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>{item.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+<style>
+  .faq-section {
+    margin-top: 3rem;
+  }
+
+  .faq-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  .faq-item[open] {
+    border-color: rgba(229, 62, 62, 0.3);
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text);
+    transition: background 0.15s ease;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question:hover {
+    background: var(--surface-hover);
+  }
+
+  .faq-question-text {
+    flex: 1;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.25s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(180deg);
+    color: var(--primary);
+  }
+
+  .faq-answer {
+    padding: 0 1.25rem 1.125rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    margin-top: -1px;
+    padding-top: 1rem;
+  }
+
+  .faq-answer p {
+    margin: 0;
+  }
+</style>

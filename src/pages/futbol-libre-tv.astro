@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Fútbol Libre TV Online - Partidos en Directo Gratis";
+const description = "Fútbol Libre TV online. Ver partidos de fútbol en directo gratis hoy.";
+const keywords = "fútbol libre tv, futbol libre tv, fútbol libre tv online, fútbol libre tv hoy";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Qué es Fútbol Libre TV?",
+    answer: "Fútbol Libre TV es una plataforma de streaming que permite ver partidos de fútbol en vivo y en diferido de forma gratuita. Es especialmente popular en América Latina para seguir la liga local y las competiciones internacionales. deportesenvivo.live es una excelente alternativa con cobertura mundial.",
+  },
+  {
+    question: "¿Fútbol Libre TV transmite la Copa Libertadores?",
+    answer: "En deportesenvivo.live encontrarás transmisiones de Copa Libertadores, Copa Sudamericana, Liga Argentina, Liga MX, LaLiga española, Champions League y mucho más. La programación cubre eventos deportivos de todo el mundo.",
+  },
+  {
+    question: "¿Puedo ver Fútbol Libre TV hoy en mi teléfono?",
+    answer: "Sí, deportesenvivo.live está completamente optimizado para móviles. Abre el navegador en tu teléfono, entra al sitio y elige el partido. Sin descargas, sin registro, sin costo.",
+  },
+  {
+    question: "¿Fútbol Libre TV tiene buena calidad de imagen?",
+    answer: "La calidad depende del servidor y tu conexión a internet. Ofrecemos tres servidores distintos para que puedas elegir el que mejor funcione en tu red. Si la imagen no es fluida, cambia de servidor con un solo clic.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/futbol-libre-tv"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Fútbol Libre TV</h1>
+      <p class="subtitle">Ver fútbol en directo gratis online — Fútbol Libre TV hoy</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Fútbol Libre TV — Ver Fútbol Gratis en Directo</h2>
+      <p>
+        <strong>Fútbol Libre TV</strong> es el destino favorito de millones de aficionados que quieren ver fútbol en directo sin pagar una suscripción. En deportesenvivo.live tienes acceso a la mejor alternativa de <strong>Fútbol Libre TV online</strong>: partidos en vivo de las principales ligas del mundo, disponibles las 24 horas con tres servidores redundantes para garantizar siempre disponibilidad. LaLiga, Champions League, Copa Libertadores, Premier League y mucho más.
+      </p>
+      <p>
+        <strong>Fútbol Libre TV hoy</strong> en deportesenvivo.live significa programación actualizada en tiempo real. Todos los partidos del día aparecen automáticamente con su hora en tu zona horaria local y un indicador EN VIVO cuando el partido está en curso. Nunca más te perderás el inicio de un partido por no saber el horario.
+      </p>
+      <p>
+        Explora también <a href="/futbol-libre">Fútbol Libre</a>, <a href="/futbol-en-vivo">Fútbol en Vivo</a>, <a href="/pirlo-tv">Pirlo TV</a> o <a href="/tarjeta-roja-tv">Tarjeta Roja TV</a> para más fuentes de streaming gratuito. Comparte los partidos del día con tus amigos por Telegram usando la <a href="/compartir">herramienta de compartir</a>.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

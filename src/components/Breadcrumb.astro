@@ -1,0 +1,53 @@
+---
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+export interface Props {
+  items: BreadcrumbItem[];
+}
+const { items } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": item.label,
+    ...(item.href ? { "item": `https://deportesenvivo.live${item.href}` } : {})
+  }))
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<nav class="breadcrumb" aria-label="Ruta de navegación">
+  {items.map((item, i) => (
+    <>
+      {i > 0 && <span class="breadcrumb-sep" aria-hidden="true">›</span>}
+      {item.href && i < items.length - 1
+        ? <a href={item.href} class="breadcrumb-link">{item.label}</a>
+        : <span class="breadcrumb-current" aria-current="page">{item.label}</span>
+      }
+    </>
+  ))}
+</nav>
+
+<style>
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .breadcrumb-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .breadcrumb-link:hover { color: var(--primary); }
+  .breadcrumb-sep { color: var(--border); }
+  .breadcrumb-current { color: var(--text); font-weight: 600; }
+</style>

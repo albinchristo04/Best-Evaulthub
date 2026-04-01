@@ -1,0 +1,102 @@
+---
+/**
+ * SEOHead.astro
+ * Renders all <head> SEO tags, OG meta, canonical, and JSON-LD structured data.
+ */
+
+export interface Props {
+  title: string;
+  description: string;
+  keywords?: string;
+  ogType?: string;
+  ogUrl?: string;
+  canonicalUrl?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  keywords = '',
+  ogType = 'website',
+  ogUrl = 'https://deportesenvivo.live',
+  canonicalUrl = 'https://deportesenvivo.live',
+  structuredData,
+} = Astro.props;
+
+const siteTitle = `${title} | Deportes en Vivo`;
+const ogImage = 'https://deportesenvivo.live/og-image.png';
+
+// Normalise structuredData to array for output
+const ldArray: Record<string, unknown>[] = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+
+// Base BreadcrumbList — can be overridden / extended by page-specific additions
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Inicio',
+      item: 'https://deportesenvivo.live',
+    },
+  ],
+};
+---
+
+<!-- Primary Meta -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{siteTitle}</title>
+<meta name="description" content={description} />
+{keywords && <meta name="keywords" content={keywords} />}
+<meta name="robots" content="index, follow" />
+<meta name="language" content="es" />
+<meta name="author" content="deportesenvivo.live" />
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={siteTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={ogUrl} />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="Deportes en Vivo" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={siteTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+/>
+
+<!-- Base BreadcrumbList JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+<!-- Page-Specific JSON-LD -->
+{ldArray.map((ld) => (
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+))}
+
+<!-- Slot for additional head content from page -->
+<slot />
