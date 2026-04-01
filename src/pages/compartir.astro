@@ -75,15 +75,15 @@ import allMatches from '../data/all-matches.json';
       if (!byCategory[m.category]) byCategory[m.category] = [];
       byCategory[m.category].push(m);
     });
-    let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[serverNum]} · ${SITE}\n`;
+    let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[serverNum]} · https://${SITE}\n`;
     for (const [cat, evts] of Object.entries(byCategory)) {
-      text += `\n${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n`;
+      text += `\n${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n\n`;
       evts.forEach(m => {
         const live = isLive(m) ? ' 🔴 EN VIVO' : '';
-        text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  → ${SITE}/match/${m.id}\n`;
+        text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  https://${SITE}/match/${m.id}\n\n`;
       });
     }
-    text += `\n📺 Ver todos → ${SITE}`;
+    text += `📺 Ver todos → https://${SITE}`;
     return text;
   }
 
@@ -246,13 +246,13 @@ import allMatches from '../data/all-matches.json';
         const cat = btn.dataset.cat!;
         const catMatches = byServer[s].filter(m => m.category === cat && selected.has(m.id + '-' + s));
         if (!catMatches.length) return;
-        let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[s]} · ${SITE}\n\n`;
-        text += `${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n`;
+        let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[s]} · https://${SITE}\n\n`;
+        text += `${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n\n`;
         catMatches.forEach(m => {
-          const live = isLive(m) ? ' 🔴' : '';
-          text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  → ${SITE}/match/${m.id}\n`;
+          const live = isLive(m) ? ' 🔴 EN VIVO' : '';
+          text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  https://${SITE}/match/${m.id}\n\n`;
         });
-        text += `\n📺 Ver todos → ${SITE}`;
+        text += `📺 Ver todos → https://${SITE}`;
         copyText(text, btn);
       });
     });

@@ -57,37 +57,45 @@ const labels: Record<number, string> = {
 
 <script>
   (function initServerTabs() {
+    // Match panels by EITHER id="server-content-N" OR class containing "server-content-N"
+    function getPanels(): NodeListOf<HTMLElement> {
+      return document.querySelectorAll<HTMLElement>(
+        '[id^="server-content-"], [class*="server-content-"]'
+      );
+    }
+
+    function getPanelNum(el: HTMLElement): string | null {
+      const fromId = el.id.match(/server-content-(\d)/);
+      if (fromId) return fromId[1];
+      const fromClass = el.className.match(/server-content-(\d)/);
+      return fromClass ? fromClass[1] : null;
+    }
+
     const tabBars = document.querySelectorAll<HTMLElement>('.server-tabs');
 
     tabBars.forEach((bar) => {
       const tabs = bar.querySelectorAll<HTMLButtonElement>('[data-server]');
-
-      // Hide all server panels except the active one on init
       const activeTab = bar.querySelector<HTMLButtonElement>('.server-tab.active');
       const activeServer = activeTab?.dataset.server ?? '1';
 
-      document.querySelectorAll<HTMLElement>('[class^="server-content-"], [class*=" server-content-"]').forEach((panel) => {
-        // Extract server number from class like "server-content-2"
-        const match = panel.className.match(/server-content-(\d)/);
-        if (match) {
-          panel.hidden = match[1] !== activeServer;
-        }
+      // Init: hide all panels except the active server
+      getPanels().forEach((panel) => {
+        const num = getPanelNum(panel);
+        if (num) panel.hidden = num !== activeServer;
       });
 
       tabs.forEach((tab) => {
         tab.addEventListener('click', () => {
           const server = tab.dataset.server!;
 
-          // Update tab states
           tabs.forEach((t) => {
             t.classList.toggle('active', t === tab);
             t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
           });
 
-          // Show/hide panels
-          document.querySelectorAll<HTMLElement>('[class*="server-content-"]').forEach((panel) => {
-            const m = panel.className.match(/server-content-(\d)/);
-            if (m) panel.hidden = m[1] !== server;
+          getPanels().forEach((panel) => {
+            const num = getPanelNum(panel);
+            if (num) panel.hidden = num !== server;
           });
         });
       });
