@@ -1,0 +1,453 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import allMatches from '../../data/all-matches.json';
+
+export async function getStaticPaths() {
+  type Match = (typeof allMatches)[number];
+
+  // Group all matches by id (slug)
+  const byId: Record<string, Match[]> = {};
+  for (const m of allMatches) {
+    if (!byId[m.id]) byId[m.id] = [];
+    byId[m.id].push(m);
+  }
+
+  return Object.entries(byId).map(([slug, events]) => ({
+    params: { slug },
+    props: { slug, events },
+  }));
+}
+
+type Match = (typeof allMatches)[number];
+
+export interface Props {
+  slug: string;
+  events: Match[];
+}
+
+const { slug, events } = Astro.props;
+
+// Use the first event as primary metadata (prefer S1 if available)
+const primary = events.find(e => e.server === 1) || events[0];
+const { teams, league, category, startTime, endTime } = primary;
+
+const EMOJI: Record<string, string> = {
+  football: '⚽', basketball: '🏀', baseball: '⚾', tennis: '🎾',
+  cricket: '🏏', hockey: '🏒', boxing: '🥊', mma: '🥊', darts: '🎯', other: '🏆'
+};
+
+const categoryLabel: Record<string, string> = {
+  football: 'Fútbol', basketball: 'Baloncesto', baseball: 'Béisbol',
+  tennis: 'Tenis', cricket: 'Cricket', hockey: 'Hockey',
+  boxing: 'Boxeo', mma: 'MMA', darts: 'Dardos', other: 'Deportes'
+};
+
+const startIso = startTime ? new Date(startTime * 1000).toISOString() : '';
+const endIso = endTime ? new Date(endTime * 1000).toISOString() : '';
+const [team1, team2] = teams.split(' vs ');
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    "name": teams,
+    "startDate": startIso,
+    "endDate": endIso || undefined,
+    "location": { "@type": "VirtualLocation", "url": `https://deportesenvivo.live/match/${slug}` },
+    "competitor": [
+      { "@type": "SportsTeam", "name": team1?.trim() || teams },
+      { "@type": "SportsTeam", "name": team2?.trim() || '' },
+    ].filter(c => c.name),
+    "sport": categoryLabel[category] || category,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://deportesenvivo.live" },
+      { "@type": "ListItem", "position": 2, "name": categoryLabel[category] || category, "item": `https://deportesenvivo.live/futbol-en-vivo` },
+      { "@type": "ListItem", "position": 3, "name": teams, "item": `https://deportesenvivo.live/match/${slug}` },
+    ],
+  },
+];
+
+// Servers that have this match
+const serversPresent = [...new Set(events.map(e => e.server))].sort() as (1 | 2 | 3)[];
+
+// Related matches: same category, different id
+const related = (allMatches as Match[])
+  .filter(m => m.category === category && m.id !== slug)
+  .slice(0, 6);
+
+const pageTitle = `${teams} en Vivo`;
+const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streaming HD sin registro.`;
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  keywords={`${teams}, ${teams} en vivo, ${league} en vivo, ver ${teams} online`}
+  canonicalUrl={`https://deportesenvivo.live/match/${slug}`}
+  ogType="video.other"
+  jsonLd={jsonLd}
+  pageType="match"
+  matchId={slug}
+>
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Inicio</a>
+      <span aria-hidden="true">›</span>
+      <a href="/futbol-en-vivo">{EMOJI[category]} {categoryLabel[category]}</a>
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{teams}</span>
+    </nav>
+
+    <!-- Match Header -->
+    <div class="match-header">
+      <div class="match-league">{league}</div>
+      <h1 class="match-title">{teams}</h1>
+      <div class="match-meta">
+        <time id="match-time" data-ts={startTime}>{startIso}</time>
+        <span id="live-indicator"></span>
+      </div>
+    </div>
+
+    <!-- Server + Channel Tabs -->
+    <div class="player-controls">
+      <div class="control-group">
+        <span class="control-label">Servidor:</span>
+        <div class="server-tabs" role="tablist" id="match-server-tabs">
+          {serversPresent.map(n => (
+            <button
+              class={`server-tab${n === serversPresent[0] ? ' active' : ''}`}
+              role="tab"
+              data-server={n}
+              aria-label={`Servidor ${n}`}
+            >
+              <span class="tab-dot"></span> S{n}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div class="control-group" id="channel-group">
+        <span class="control-label">Canal:</span>
+        <div class="channel-pills" id="channel-pills" role="tablist"></div>
+      </div>
+    </div>
+
+    <!-- Player -->
+    <div class="player-container">
+      <iframe
+        id="match-player"
+        src=""
+        sandbox="allow-scripts allow-same-origin"
+        allow="encrypted-media; autoplay"
+        allowfullscreen
+        style="width:100%;height:100%;border:none;"
+        title={`Ver ${teams} en vivo`}
+      ></iframe>
+    </div>
+
+    <!-- Embed Box -->
+    <div class="embed-box">
+      <div class="embed-box-header">
+        <span>🔗 Código para incrustar en tu web</span>
+      </div>
+      <code class="embed-code" id="embed-code-text"></code>
+      <button class="copy-btn btn btn-outline" id="copy-embed-btn">Copiar código</button>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="seo-content">
+      <h2>Ver {teams} en Vivo Online</h2>
+      <p>
+        ¿Buscas dónde <strong>ver {teams} en vivo</strong> hoy? En deportesenvivo.live ofrecemos
+        streaming gratuito del partido de <strong>{league}</strong>. No necesitas registro ni suscripción.
+        Selecciona el servidor que mejor funcione en tu conexión y disfruta del partido en directo.
+        Si tienes problemas con un servidor, prueba cambiando al siguiente.
+      </p>
+      <p>
+        Todos los horarios se muestran en tu zona horaria local. El partido de <strong>{teams}</strong>
+        está disponible con múltiples servidores alternativos para garantizar la mejor disponibilidad.
+        Comparte el enlace con tus amigos o usa el código de incrustación para añadir el stream en tu propia web.
+      </p>
+    </div>
+
+    <!-- Related Matches -->
+    {related.length > 0 && (
+      <section class="related-section">
+        <h2>Más partidos de {categoryLabel[category]}</h2>
+        <div class="match-grid">
+          {related.map(m => (
+            <article class="card match-card" data-start={m.startTime} data-end={m.endTime} data-server={m.server} data-category={m.category}>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="category-badge">{EMOJI[m.category] || '🏆'}</span>
+                  <span class="live-badge-slot" aria-live="polite"></span>
+                </div>
+                <div class="card-teams">{m.teams}</div>
+                <div class="card-league">{m.league}</div>
+                <div class="card-time"><time class="match-time" data-ts={m.startTime}>{m.startTime ? new Date(m.startTime * 1000).toISOString() : ''}</time></div>
+                <a href={`/match/${m.id}?s=${m.server}`} class="btn btn-primary card-btn">Ver en vivo →</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<script define:vars={{ eventsData: events, slug }}>
+  const SUPABASE_URL = document.getElementById('supabase-config')?.dataset.url || '';
+  const SUPABASE_KEY = document.getElementById('supabase-config')?.dataset.key || '';
+
+  // Parse URL params
+  function getParam(name, def) {
+    return new URLSearchParams(window.location.search).get(name) || def;
+  }
+
+  let activeServer = parseInt(getParam('s', String(eventsData[0]?.server || 1)));
+  let activeChannel = parseInt(getParam('ch', '0'));
+
+  function getServerEvents() {
+    return eventsData.filter(e => e.server === activeServer);
+  }
+
+  function getChannels() {
+    return getServerEvents().flatMap(e => e.channels || []);
+  }
+
+  function getEmbedUrl() {
+    const channels = getChannels();
+    return channels[activeChannel]?.embedUrl || channels[0]?.embedUrl || '';
+  }
+
+  function updatePlayer() {
+    const url = getEmbedUrl();
+    const player = document.getElementById('match-player');
+    if (player && url) player.src = url;
+
+    // Update embed code
+    const code = `<iframe src="https://deportesenvivo.live/embed/${slug}?s=${activeServer}&ch=${activeChannel}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>`;
+    const codeEl = document.getElementById('embed-code-text');
+    if (codeEl) codeEl.textContent = code;
+  }
+
+  function updateChannelPills() {
+    const channels = getChannels();
+    const container = document.getElementById('channel-pills');
+    const group = document.getElementById('channel-group');
+    if (!container) return;
+
+    if (channels.length <= 1) {
+      if (group) group.style.display = 'none';
+      return;
+    }
+    if (group) group.style.display = '';
+
+    container.innerHTML = channels.map((ch, i) =>
+      `<button class="category-pill${i === activeChannel ? ' active' : ''}" data-ch="${i}" role="tab" aria-selected="${i === activeChannel}">${ch.name}</button>`
+    ).join('');
+
+    container.querySelectorAll('[data-ch]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeChannel = parseInt(btn.dataset.ch);
+        updateChannelPills();
+        updatePlayer();
+      });
+    });
+  }
+
+  function updateServerTabs() {
+    document.querySelectorAll('#match-server-tabs [data-server]').forEach(tab => {
+      const s = parseInt(tab.dataset.server);
+      tab.classList.toggle('active', s === activeServer);
+      tab.setAttribute('aria-selected', s === activeServer ? 'true' : 'false');
+    });
+  }
+
+  function init() {
+    // Wire server tabs
+    document.querySelectorAll('#match-server-tabs [data-server]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        activeServer = parseInt(tab.dataset.server);
+        activeChannel = 0;
+        updateServerTabs();
+        updateChannelPills();
+        updatePlayer();
+      });
+    });
+
+    // Copy embed button
+    document.getElementById('copy-embed-btn')?.addEventListener('click', (e) => {
+      const code = document.getElementById('embed-code-text')?.textContent || '';
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = e.target;
+        const orig = btn.textContent;
+        btn.textContent = '✅ Copiado!';
+        setTimeout(() => btn.textContent = orig, 2000);
+      }).catch(() => {});
+    });
+
+    // Update match time to local timezone
+    document.querySelectorAll('.match-time[data-ts]').forEach(el => {
+      const ts = parseInt(el.dataset.ts || '0');
+      if (ts > 0) {
+        el.textContent = new Intl.DateTimeFormat(navigator.language || 'es', {
+          hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short'
+        }).format(new Date(ts * 1000));
+      }
+    });
+
+    // Match time in header
+    const headerTime = document.getElementById('match-time');
+    if (headerTime) {
+      const ts = parseInt(headerTime.dataset.ts || '0');
+      if (ts > 0) {
+        headerTime.textContent = new Intl.DateTimeFormat(navigator.language || 'es', {
+          weekday: 'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'long'
+        }).format(new Date(ts * 1000));
+      }
+    }
+
+    // Live indicator
+    const now = Math.floor(Date.now() / 1000);
+    const start = eventsData[0]?.startTime || 0;
+    const end = eventsData[0]?.endTime || 0;
+    if (start && now >= start && (end === 0 || now <= end)) {
+      const indicator = document.getElementById('live-indicator');
+      if (indicator) indicator.innerHTML = '<span class="live-badge">🔴 EN VIVO</span>';
+    }
+
+    // Live badges on related cards
+    document.querySelectorAll('.match-card').forEach(card => {
+      const s = parseInt(card.dataset.start || '0');
+      const e = parseInt(card.dataset.end || '0');
+      const isLive = s > 0 && now >= s && (e === 0 || now <= e);
+      const slot = card.querySelector('.live-badge-slot');
+      if (slot && isLive) slot.innerHTML = '<span class="live-badge">🔴 EN VIVO</span>';
+    });
+
+    // Supabase view tracking
+    if (SUPABASE_URL && SUPABASE_KEY) {
+      fetch(`${SUPABASE_URL}/rest/v1/page_views`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          page_path: window.location.pathname,
+          page_type: 'match',
+          match_id: slug,
+          referrer: document.referrer || null,
+        }),
+      }).catch(() => {});
+    }
+
+    updateChannelPills();
+    updatePlayer();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<style>
+  .match-header {
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  .match-league {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .match-title {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .match-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .player-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .control-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .channel-pills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .embed-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .embed-box-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .embed-code {
+    display: block;
+    background: #0a0a0f;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+    word-break: break-all;
+    margin-bottom: 0.5rem;
+    font-family: 'Courier New', monospace;
+  }
+  .related-section { margin-top: 2rem; }
+  .related-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span[aria-current] { color: var(--text); }
+</style>

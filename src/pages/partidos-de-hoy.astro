@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Partidos de Hoy en Vivo - Calendario Deportivo Completo";
+const description = "Partidos de hoy en vivo. Calendario deportivo completo con todos los partidos de fútbol, NBA, MLB y más.";
+const keywords = "partidos de hoy, partidos hoy, partidos de hoy en vivo, ver partidos hoy, partidos de fútbol hoy";
+
+const today = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+const faqItems = [
+  {
+    question: "¿Dónde ver los partidos de hoy en vivo?",
+    answer: "En deportesenvivo.live encontrarás todos los partidos de hoy en vivo actualizados. Simplemente visita el sitio y verás el calendario completo con fútbol, NBA, MLB y otros deportes programados para hoy.",
+  },
+  {
+    question: "¿A qué hora son los partidos de fútbol de hoy?",
+    answer: "Los horarios de los partidos de hoy se muestran automáticamente en tu zona horaria local. Así sabrás exactamente a qué hora empieza cada partido sin tener que hacer conversiones manuales.",
+  },
+  {
+    question: "¿Cómo sé si un partido de hoy está en vivo ahora?",
+    answer: "Los partidos que están en curso se marcan con una insignia roja pulsante que dice 'EN VIVO'. Los partidos futuros muestran la hora de inicio. Los horarios se actualizan automáticamente.",
+  },
+  {
+    question: "¿Se actualizan los partidos de hoy automáticamente?",
+    answer: "Sí, el calendario de partidos de hoy se actualiza cada 30 minutos automáticamente. Si un partido nuevo es añadido a la programación, aparecerá en la próxima actualización.",
+  },
+  {
+    question: "¿Puedo compartir los partidos de hoy con mis amigos?",
+    answer: "Sí. Usa nuestra herramienta de compartir en /compartir para copiar la lista de partidos de hoy en formato Telegram o WhatsApp con un solo clic y enviársela a tus amigos.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/partidos-de-hoy"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Partidos de Hoy</h1>
+      <p class="subtitle">Calendario deportivo completo — todos los partidos en vivo de hoy</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches as any[]} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={s2Matches as any[]} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={s3Matches as any[]} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Calendario Completo de Partidos de Hoy en Vivo</h2>
+      <p>
+        Aquí tienes todos los <strong>partidos de hoy</strong> disponibles para ver en streaming gratis. Nuestro calendario deportivo se actualiza automáticamente con los últimos eventos, mostrando los horarios en tu zona horaria local. Tanto si buscas <strong>partidos de fútbol hoy</strong> como juegos de NBA, MLB u otros deportes, los encontrarás todos aquí.
+      </p>
+      <p>
+        Los <strong>partidos de hoy en vivo</strong> se marcan automáticamente con una insignia roja cuando están en curso. Puedes filtrar por deporte usando las categorías de la parte superior. También tienes la opción de compartir el calendario de partidos de hoy con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> con formato para Telegram y WhatsApp.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

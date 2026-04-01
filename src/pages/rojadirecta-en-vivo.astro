@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Rojadirecta en Vivo Hoy - Ver Deportes Gratis";
+const description = "Rojadirecta en vivo hoy. Ver deportes en directo gratis sin registro. Alternativa a Rojadirecta online.";
+const keywords = "rojadirecta en vivo, rojadirecta en vivo hoy, rojadirecta online, rojadirecta gratis";
+
+const filteredS1 = (s1Matches as any[]).filter(m => m.category === 'football');
+const filteredS2 = (s2Matches as any[]).filter(m => m.category === 'football');
+const filteredS3 = (s3Matches as any[]).filter(m => m.category === 'football');
+
+const faqItems = [
+  {
+    question: "¿Qué es Rojadirecta en Vivo?",
+    answer: "Rojadirecta en vivo es una de las alternativas más buscadas para ver fútbol y deportes en directo de forma gratuita por internet. En deportesenvivo.live ofrecemos una experiencia similar con múltiples servidores y sin necesidad de registro.",
+  },
+  {
+    question: "¿Cómo entrar a Rojadirecta en vivo hoy?",
+    answer: "Si buscas Rojadirecta en vivo, puedes usar deportesenvivo.live como alternativa directa. Ofrece los mismos partidos con streams actualizados cada 30 minutos. No necesitas VPN ni registro.",
+  },
+  {
+    question: "¿Rojadirecta en vivo tiene los partidos de LaLiga?",
+    answer: "Sí. En deportesenvivo.live encontrarás los partidos de LaLiga en vivo, además de Premier League, Serie A, Bundesliga, Champions League y todas las grandes competiciones europeas y mundiales.",
+  },
+  {
+    question: "¿Qué alternativas hay a Rojadirecta en vivo?",
+    answer: "Las mejores alternativas a Rojadirecta en vivo son: deportesenvivo.live (este sitio), Pirlo TV, Fútbol Libre, Tarjeta Roja y otras plataformas de streaming deportivo gratuito. Todas están enlazadas desde nuestra web.",
+  },
+  {
+    question: "¿Rojadirecta en vivo funciona en móvil?",
+    answer: "Nuestra alternativa a Rojadirecta en vivo está completamente optimizada para móviles. Funciona en todos los smartphones Android e iPhone sin necesidad de descargar ninguna aplicación.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/rojadirecta-en-vivo"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Rojadirecta en Vivo</h1>
+      <p class="subtitle">Ver deportes en directo gratis hoy — alternativa oficial a Rojadirecta</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Rojadirecta en Vivo — La Mejor Alternativa Gratis</h2>
+      <p>
+        Si buscas <strong>Rojadirecta en vivo</strong>, deportesenvivo.live es tu mejor alternativa. Ofrecemos streaming gratuito de todos los grandes partidos de fútbol y deportes del día, con múltiples servidores para garantizar la mejor disponibilidad. Todos los horarios se adaptan automáticamente a tu zona horaria, y no necesitas registro ni suscripción para acceder.
+      </p>
+      <p>
+        Nuestra plataforma funciona como <strong>Rojadirecta en vivo hoy</strong> con streams actualizados cada 30 minutos. También puedes visitar <a href="/rojadirecta-tv">Rojadirecta TV</a>, <a href="/roja-directa">Roja Directa</a> o <a href="/tarjeta-roja">Tarjeta Roja</a> para más alternativas de streaming deportivo gratuito. Usa la herramienta <a href="/compartir">Compartir</a> para enviar los partidos del día a tus contactos.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "LiveTV - Deportes en Vivo Streaming Gratis";
+const description = "LiveTV deportes en vivo. Ver streaming gratis de fútbol, NBA, MLB y más deportes online.";
+const keywords = "livetv, live tv deportes, livetv fútbol, livetv en vivo, live tv online";
+
+const faqItems = [
+  {
+    question: "¿Qué es LiveTV y cómo funciona?",
+    answer: "LiveTV es una plataforma de streaming deportivo en vivo. En deportesenvivo.live ofrecemos la misma experiencia: ver deportes en directo gratis desde cualquier navegador, sin instalaciones ni suscripciones.",
+  },
+  {
+    question: "¿Qué deportes puedo ver en LiveTV gratis?",
+    answer: "En nuestra versión de LiveTV puedes ver fútbol en vivo, partidos de NBA, MLB, NHL, tenis ATP y WTA, cricket, boxeo, MMA y más. El contenido se actualiza diariamente según el calendario deportivo.",
+  },
+  {
+    question: "¿LiveTV funciona sin VPN?",
+    answer: "Sí. En deportesenvivo.live no necesitas VPN para ver deportes en vivo. El servicio está disponible globalmente desde cualquier conexión a internet.",
+  },
+  {
+    question: "¿LiveTV tiene app para móvil?",
+    answer: "No necesitas ninguna app. Nuestra plataforma LiveTV funciona directamente en el navegador de tu móvil, tanto en Android como en iPhone. Solo abre deportesenvivo.live y ya puedes ver deportes en vivo.",
+  },
+  {
+    question: "¿Por qué LiveTV no carga el stream?",
+    answer: "Si el stream de LiveTV no carga, prueba cambiando de servidor (Servidor 2 o Servidor 3). También puede ser un problema temporal del proveedor del stream. Recarga la página o vuelve en unos minutos.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/livetv"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>LiveTV</h1>
+      <p class="subtitle">Deportes en vivo streaming gratis — fútbol, NBA, MLB y más</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches as any[]} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={s2Matches as any[]} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={s3Matches as any[]} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>LiveTV Deportes — Streaming Gratuito en Vivo</h2>
+      <p>
+        <strong>LiveTV</strong> es sinónimo de deportes en directo gratis por internet. En deportesenvivo.live ponemos a tu disposición la mejor experiencia de <strong>live tv online</strong> para seguir todos los partidos importantes del día. Desde el fútbol europeo de primer nivel hasta la NBA y el béisbol de la MLB, todo en un solo sitio sin costes ocultos.
+      </p>
+      <p>
+        Nuestra plataforma <strong>LiveTV deportes</strong> ofrece múltiples servidores alternativos para garantizar la mejor disponibilidad. Cambiar entre servidores es instantáneo. También tienes filtros por categoría deportiva para encontrar rápidamente los partidos que te interesan. Visita también <a href="/partidos-en-vivo">partidos en vivo</a> o <a href="/roja-directa">Roja Directa</a> para explorar más opciones.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

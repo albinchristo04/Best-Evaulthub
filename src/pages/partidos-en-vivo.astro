@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Partidos en Vivo Hoy - Fútbol, NBA, MLB en Directo";
+const description = "Partidos en vivo hoy. Ver fútbol, NBA, MLB y más deportes en directo gratis sin registro.";
+const keywords = "partidos en vivo, partidos en vivo hoy, ver partidos en vivo, partidos online, partidos gratis";
+
+const faqItems = [
+  {
+    question: "¿Dónde ver partidos en vivo hoy gratis?",
+    answer: "En deportesenvivo.live puedes ver partidos en vivo hoy completamente gratis. Tenemos fútbol, NBA, MLB, tenis y más. Solo entra al sitio, elige el partido y haz clic en 'Ver en vivo'.",
+  },
+  {
+    question: "¿Qué deportes tienen partidos en vivo ahora mismo?",
+    answer: "Cubrimos fútbol (LaLiga, Premier, Champions), baloncesto (NBA), béisbol (MLB), tenis (ATP, WTA), hockey (NHL), críquet, boxeo, MMA y más. La disponibilidad depende del calendario deportivo del día.",
+  },
+  {
+    question: "¿Los partidos en vivo tienen retraso de señal?",
+    answer: "Los streams pueden tener un pequeño retraso de entre 10 y 30 segundos respecto a la señal en directo, lo cual es normal en streaming online. Para una experiencia óptima recomendamos una conexión a internet de al menos 5 Mbps.",
+  },
+  {
+    question: "¿Puedo ver los partidos en vivo de hoy en mi televisor?",
+    answer: "Sí. Puedes usar Chrome Cast, conectar tu portátil al televisor con un cable HDMI, o acceder desde un Smart TV con navegador. La página funciona en cualquier dispositivo con internet.",
+  },
+  {
+    question: "¿Por qué no aparecen partidos en vivo?",
+    answer: "Si no ves partidos es posible que no haya eventos en este momento o que los datos estén actualizándose. Prueba recargar la página. Los partidos se actualizan cada 30 minutos automáticamente.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/partidos-en-vivo"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Partidos en Vivo</h1>
+      <p class="subtitle">Fútbol, NBA, MLB y más deportes en directo gratis hoy</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches as any[]} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={s2Matches as any[]} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={s3Matches as any[]} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Todos los Partidos en Vivo — Fútbol, NBA, MLB y Más</h2>
+      <p>
+        ¿Buscas <strong>partidos en vivo hoy</strong>? En deportesenvivo.live reunimos los mejores streams deportivos del mundo en un solo lugar. Desde los <strong>partidos en vivo</strong> de fútbol europeo hasta los juegos de NBA, pasando por la temporada de MLB y los torneos de tenis ATP y WTA. Todo gratis, sin registro y actualizado cada 30 minutos.
+      </p>
+      <p>
+        Puedes <strong>ver partidos en vivo online</strong> desde cualquier dispositivo: móvil, tablet o computadora. Si un servidor no funciona correctamente, simplemente cambia al siguiente con un clic. Explora también nuestra sección de <a href="/futbol-en-vivo">fútbol en vivo</a> o visita <a href="/partidos-de-hoy">partidos de hoy</a> para ver el calendario completo del día.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

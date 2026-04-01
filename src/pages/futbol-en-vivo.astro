@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Fútbol en Vivo Hoy - Ver Partidos Online Gratis";
+const description = "Fútbol en vivo hoy. Ver partidos de fútbol online gratis en directo sin registro.";
+const keywords = "fútbol en vivo, futbol en vivo hoy, ver fútbol en vivo, fútbol en vivo gratis, fútbol en vivo online";
+
+const filteredS1 = (s1Matches as any[]).filter(m => m.category === 'football');
+const filteredS2 = (s2Matches as any[]).filter(m => m.category === 'football');
+const filteredS3 = (s3Matches as any[]).filter(m => m.category === 'football');
+
+const faqItems = [
+  {
+    question: "¿Cómo ver fútbol en vivo gratis hoy?",
+    answer: "Para ver fútbol en vivo hoy gratis, entra a deportesenvivo.live, selecciona el partido que te interesa y haz clic en 'Ver en vivo'. No necesitas registrarte ni pagar nada. Si un servidor no funciona, prueba con otro.",
+  },
+  {
+    question: "¿Qué ligas de fútbol puedo ver en vivo?",
+    answer: "Puedes ver en vivo la Liga española (LaLiga), Premier League, Serie A, Bundesliga, Ligue 1, Champions League, Europa League, Copa Libertadores, partidos de selecciones nacionales y muchas más competiciones internacionales.",
+  },
+  {
+    question: "¿Funciona el fútbol en vivo en Android e iPhone?",
+    answer: "Sí. Nuestra plataforma de fútbol en vivo está completamente optimizada para móviles. Funciona en todos los dispositivos con un navegador moderno: Android, iPhone, tablet o PC.",
+  },
+  {
+    question: "¿Por qué el stream de fútbol en vivo está cortado o lento?",
+    answer: "La calidad del stream puede depender de tu conexión a internet o del servidor. Prueba cambiar al Servidor 2 o Servidor 3. También puedes recargar la página para reiniciar la transmisión.",
+  },
+  {
+    question: "¿Cuándo se actualizan los partidos de fútbol en vivo?",
+    answer: "Los partidos de fútbol en vivo se actualizan automáticamente cada 30 minutos. La programación refleja los partidos del día en curso con sus horarios en tu zona horaria local.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/futbol-en-vivo"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Fútbol en Vivo</h1>
+      <p class="subtitle">Ver partidos de fútbol en directo gratis — sin registro ni descarga</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" class="hidden">
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" class="hidden">
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Fútbol en Vivo Online — Todos los Partidos de Hoy</h2>
+      <p>
+        Si buscas <strong>fútbol en vivo</strong>, has llegado al lugar indicado. En deportesenvivo.live transmitimos en directo todos los grandes partidos de fútbol del día: desde LaLiga y la Premier League hasta la Champions League y los partidos de Copa. Nuestros streams de <strong>fútbol en vivo gratis</strong> se actualizan cada media hora para que siempre tengas acceso a los mejores encuentros sin pagar suscripciones ni registrarte.
+      </p>
+      <p>
+        Para <strong>ver fútbol en vivo online</strong> en nuestro sitio, simplemente selecciona el partido y elige el servidor que mejor funcione en tu conexión. Ofrecemos tres servidores alternativos para que nunca te quedes sin ver un partido. Los horarios se muestran automáticamente en tu zona horaria local. También puedes explorar <a href="/partidos-de-hoy">partidos de hoy</a>, <a href="/futbol-libre">fútbol libre</a> o <a href="/tarjeta-roja">Tarjeta Roja</a> para más opciones.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+  </div>
+</BaseLayout>

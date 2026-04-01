@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import allMatches from '../data/all-matches.json';
+
+const title = "Compartir Partidos de Hoy";
+const description = "Comparte los partidos deportivos de hoy con tus amigos por Telegram o WhatsApp. Copia todos los links de una vez.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl="https://deportesenvivo.live/compartir"
+  pageType="share"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>📤 Compartir Partidos</h1>
+      <p class="subtitle">Copia y comparte los partidos de hoy por Telegram, WhatsApp o donde quieras</p>
+    </div>
+
+    <div id="share-tool" data-matches={JSON.stringify(allMatches)}></div>
+  </div>
+</BaseLayout>
+
+<script>
+  const SITE = 'deportesenvivo.live';
+
+  const EMOJI: Record<string, string> = {
+    football: '⚽', basketball: '🏀', baseball: '⚾', tennis: '🎾',
+    cricket: '🏏', hockey: '🏒', boxing: '🥊', mma: '🥊', darts: '🎯', other: '🏆'
+  };
+
+  const LABEL: Record<string, string> = {
+    football: 'FÚTBOL', basketball: 'BALONCESTO / NBA', baseball: 'BÉISBOL / MLB',
+    tennis: 'TENIS', cricket: 'CRICKET', hockey: 'HOCKEY', boxing: 'BOXEO',
+    mma: 'MMA', darts: 'DARDOS', other: 'OTROS DEPORTES'
+  };
+
+  interface Match {
+    id: string;
+    teams: string;
+    category: string;
+    startTime: number;
+    server: number;
+  }
+
+  function formatTime(ts: number): string {
+    if (!ts) return 'En vivo';
+    return new Intl.DateTimeFormat(navigator.language || 'es', {
+      hour: '2-digit', minute: '2-digit'
+    }).format(new Date(ts * 1000));
+  }
+
+  function formatDate(): string {
+    return new Intl.DateTimeFormat('es-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric'
+    }).format(new Date());
+  }
+
+  function buildText(matches: Match[]): string {
+    const byCategory: Record<string, Match[]> = {};
+    matches.forEach(m => {
+      if (!(m.category in byCategory)) byCategory[m.category] = [];
+      byCategory[m.category].push(m);
+    });
+
+    let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SITE}\n`;
+    for (const [cat, evts] of Object.entries(byCategory)) {
+      text += `\n${EMOJI[cat] || '🏆'} ${LABEL[cat] || cat.toUpperCase()}\n`;
+      evts.forEach(m => {
+        text += `• ${formatTime(m.startTime)} ${m.teams}\n  → ${SITE}/match/${m.id}\n`;
+      });
+    }
+    text += `\n📺 Ver todos → ${SITE}`;
+    return text;
+  }
+
+  function copyText(text: string, btn: HTMLButtonElement) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copiado!';
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  function render() {
+    const container = document.getElementById('share-tool');
+    if (!container) return;
+    const raw = container.dataset.matches || '[]';
+    const allMatches: Match[] = JSON.parse(raw);
+
+    // Deduplicate by id (take first occurrence)
+    const seen = new Set<string>();
+    const matches = allMatches.filter(m => {
+      if (seen.has(m.id)) return false;
+      seen.add(m.id); return true;
+    });
+
+    const byCategory: Record<string, Match[]> = {};
+    matches.forEach(m => {
+      if (!(m.category in byCategory)) byCategory[m.category] = [];
+      byCategory[m.category].push(m);
+    });
+
+    // Build selection state
+    const selected = new Set(matches.map(m => m.id));
+
+    function rebuildPreview() {
+      const chosen = matches.filter(m => selected.has(m.id));
+      const preview = document.getElementById('share-preview');
+      if (preview) preview.textContent = buildText(chosen);
+    }
+
+    let html = '<div class="share-layout">';
+
+    // Left: match list with checkboxes
+    html += '<div class="share-matches">';
+    html += '<h2 class="share-section-title">Selecciona los partidos</h2>';
+
+    for (const [cat, evts] of Object.entries(byCategory)) {
+      html += `<div class="share-category">`;
+      html += `<div class="share-cat-header">
+        <span>${EMOJI[cat] || '🏆'} ${LABEL[cat] || cat}</span>
+        <button class="share-cat-copy btn btn-outline" data-cat="${cat}">Copiar ${EMOJI[cat] || '🏆'}</button>
+      </div>`;
+      evts.forEach(m => {
+        const chk = `chk-${m.id}`;
+        html += `<label class="share-match-row" for="${chk}">
+          <input type="checkbox" id="${chk}" data-id="${m.id}" checked />
+          <span class="share-match-time">${formatTime(m.startTime)}</span>
+          <span class="share-match-teams">${m.teams}</span>
+        </label>`;
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Right: preview + copy buttons
+    html += `<div class="share-preview-col">
+      <h2 class="share-section-title">Vista previa</h2>
+      <pre id="share-preview" class="share-preview">${buildText(matches)}</pre>
+      <div class="share-actions">
+        <button id="copy-all" class="btn btn-primary">📋 Copiar Todo</button>
+        <button id="deselect-all" class="btn btn-outline">Deseleccionar todo</button>
+        <button id="select-all" class="btn btn-outline">Seleccionar todo</button>
+      </div>
+    </div>`;
+
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Wire checkboxes
+    container.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach(chk => {
+      chk.addEventListener('change', () => {
+        const id = chk.dataset.id!;
+        if (chk.checked) selected.add(id); else selected.delete(id);
+        rebuildPreview();
+      });
+    });
+
+    // Copy all
+    document.getElementById('copy-all')?.addEventListener('click', (e) => {
+      const chosen = matches.filter(m => selected.has(m.id));
+      copyText(buildText(chosen), e.target as HTMLButtonElement);
+    });
+
+    // Select / deselect all
+    document.getElementById('select-all')?.addEventListener('click', () => {
+      matches.forEach(m => selected.add(m.id));
+      container.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach(c => c.checked = true);
+      rebuildPreview();
+    });
+    document.getElementById('deselect-all')?.addEventListener('click', () => {
+      selected.clear();
+      container.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach(c => c.checked = false);
+      rebuildPreview();
+    });
+
+    // Copy by category
+    container.querySelectorAll<HTMLButtonElement>('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat!;
+        const catMatches = matches.filter(m => m.category === cat && selected.has(m.id));
+        if (!catMatches.length) return;
+        const byC: Record<string, Match[]> = { [cat]: catMatches };
+        let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SITE}\n\n`;
+        text += `${EMOJI[cat] || '🏆'} ${LABEL[cat] || cat.toUpperCase()}\n`;
+        catMatches.forEach(m => {
+          text += `• ${formatTime(m.startTime)} ${m.teams}\n  → ${SITE}/match/${m.id}\n`;
+        });
+        text += `\n📺 Ver todos → ${SITE}`;
+        copyText(text, btn);
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', render);
+</script>
+
+<style>
+  .share-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    .share-layout { grid-template-columns: 1fr; }
+  }
+  .share-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .share-category {
+    margin-bottom: 1.5rem;
+  }
+  .share-cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    padding: 0.4rem 0;
+  }
+  .share-cat-copy {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+  }
+  .share-match-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .share-match-row:hover { background: var(--surface-hover); }
+  .share-match-row input[type=checkbox] { accent-color: var(--primary); flex-shrink: 0; }
+  .share-match-time {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    min-width: 2.5rem;
+  }
+  .share-match-teams {
+    font-size: 0.85rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .share-preview-col { position: sticky; top: 80px; align-self: start; }
+  .share-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 60vh;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+  }
+  .share-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+</style>
