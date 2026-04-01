@@ -226,7 +226,15 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
   function updatePlayer() {
     const url = getEmbedUrl();
     const player = document.getElementById('match-player');
-    if (player && url) player.src = url;
+    if (player && url) {
+      // S3 sources reject sandbox — only apply it for S1 and S2
+      if (activeServer === 3) {
+        player.removeAttribute('sandbox');
+      } else {
+        player.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+      }
+      player.src = url;
+    }
 
     // Update embed code
     const code = `<iframe src="https://deportesenvivo.live/embed/${slug}?s=${activeServer}&ch=${activeChannel}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>`;

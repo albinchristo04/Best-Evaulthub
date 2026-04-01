@@ -76,7 +76,14 @@ const SUPABASE_KEY = import.meta.env.SUPABASE_ANON_KEY || 'sb_publishable_qk446p
     const embedUrl = channels[channelIdx]?.embedUrl || channels[0]?.embedUrl || '';
 
     const player = document.getElementById('embed-player') as HTMLIFrameElement;
-    if (player && embedUrl) player.src = embedUrl;
+    if (player && embedUrl) {
+      if (serverNum === 3) {
+        player.removeAttribute('sandbox');
+      } else {
+        player.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+      }
+      player.src = embedUrl;
+    }
 
     // Supabase tracking
     if (SUPABASE_URL && SUPABASE_KEY) {
