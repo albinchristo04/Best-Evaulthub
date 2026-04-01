@@ -110,7 +110,16 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
       <div class="match-meta">
         <time id="match-time" data-ts={startTime}>{startIso}</time>
         <span id="live-indicator"></span>
+        <button class="share-btn" id="share-btn" aria-label="Compartir partido">
+          🔗 Compartir
+        </button>
       </div>
+    </div>
+
+    <!-- VPN / Loading notice -->
+    <div class="stream-notice">
+      <span class="notice-icon">ℹ️</span>
+      <span>Espera <strong>al menos 10 segundos</strong> para que cargue el stream. Si la página no carga, usa una VPN como <strong>1.1.1.1</strong> (Cloudflare WARP).</span>
     </div>
 
     <!-- Server + Channel Tabs -->
@@ -287,6 +296,19 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
       });
     });
 
+    // Share button
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const url = window.location.href;
+      const title = document.title;
+      if (navigator.share) {
+        try { await navigator.share({ title, url }); } catch (_) {}
+      } else {
+        await navigator.clipboard.writeText(url).catch(() => {});
+        const btn = document.getElementById('share-btn');
+        if (btn) { btn.textContent = '✅ ¡Enlace copiado!'; setTimeout(() => btn.textContent = '🔗 Compartir', 2000); }
+      }
+    });
+
     // Copy embed button
     document.getElementById('copy-embed-btn')?.addEventListener('click', (e) => {
       const code = document.getElementById('embed-code-text')?.textContent || '';
@@ -409,6 +431,37 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
     font-size: 0.9rem;
     color: var(--text-muted);
   }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .share-btn:hover { background: var(--surface); color: var(--text); }
+
+  .stream-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: rgba(56, 178, 172, 0.08);
+    border: 1px solid rgba(56, 178, 172, 0.25);
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  .stream-notice strong { color: var(--text); }
+  .notice-icon { flex-shrink: 0; }
+
   .player-controls {
     display: flex;
     flex-wrap: wrap;
