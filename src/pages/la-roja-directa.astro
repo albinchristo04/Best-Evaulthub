@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "La Roja Directa - Ver Deportes en Vivo Gratis Hoy";
+const description = "La Roja Directa en vivo. Ver fútbol y deportes en directo gratis hoy sin registro. Alternativa a la roja directa tv online.";
+const keywords = "la roja directa, la roja directa en vivo, la roja directa tv, ver la roja directa, la roja directa online, la roja directa gratis";
+
+const faqItems = [
+  {
+    question: "¿Qué es La Roja Directa?",
+    answer: "La Roja Directa es uno de los sitios de streaming deportivo más reconocidos en español, conocido por sus retransmisiones gratuitas de fútbol y otros deportes. En deportesenvivo.live ofrecemos la misma experiencia con mayor estabilidad y tres servidores redundantes.",
+  },
+  {
+    question: "¿La Roja Directa sigue funcionando en 2026?",
+    answer: "Los sitios como La Roja Directa cambian de dominio con frecuencia. deportesenvivo.live es la alternativa permanente: siempre disponible, actualizada cada 30 minutos y con tres servidores para máxima disponibilidad.",
+  },
+  {
+    question: "¿Cómo acceder a La Roja Directa en vivo hoy?",
+    answer: "Simplemente abre deportesenvivo.live en tu navegador. Encontrarás todos los partidos del día listados con sus horarios en tu zona horaria local. Haz clic en cualquier partido para verlo de inmediato.",
+  },
+  {
+    question: "¿La Roja Directa tiene Champions League?",
+    answer: "Sí, cubrimos Champions League, Europa League, LaLiga, Premier League, Serie A y todas las grandes competiciones. La programación completa está disponible en la página de inicio.",
+  },
+  {
+    question: "¿Puedo ver La Roja Directa en el móvil?",
+    answer: "Sí. deportesenvivo.live está optimizado para móvil. Accede desde Chrome o Safari en Android o iOS sin necesidad de instalar ninguna aplicación.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/la-roja-directa"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>La Roja Directa</h1>
+      <p class="subtitle">Ver deportes en vivo gratis — la mejor alternativa a La Roja Directa online</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={s2Matches} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={s3Matches} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>La Roja Directa en Vivo — Streaming Deportivo Gratuito</h2>
+      <p>
+        <strong>La Roja Directa</strong> es una de las búsquedas más populares entre los aficionados al deporte que quieren ver partidos en directo sin pagar. En deportesenvivo.live encontrarás una alternativa completa a <strong>la roja directa en vivo</strong>: fútbol, NBA, MLB, tenis y mucho más, disponible las 24 horas con tres servidores para garantizar que siempre puedas ver tu deporte favorito.
+      </p>
+      <p>
+        Para <strong>ver la roja directa online</strong> no necesitas registrarte, descargar aplicaciones ni introducir datos de pago. Abre el sitio, selecciona el partido del día y empieza a ver. Los horarios se muestran automáticamente en tu zona horaria local, y los eventos en curso aparecen con la etiqueta <strong>EN VIVO</strong> en rojo.
+      </p>
+      <p>
+        ¿Quieres más opciones? Prueba también <a href="/roja-directa">Roja Directa</a>, <a href="/rojadirecta-tv">Rojadirecta TV</a>, <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a> o <a href="/tarjeta-roja">Tarjeta Roja</a> para acceder a los mismos partidos desde distintas fuentes.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/rojadirecta-tv">Rojadirecta TV</a>
+        <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

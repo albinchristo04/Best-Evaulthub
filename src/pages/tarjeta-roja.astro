@@ -9,7 +9,7 @@ import s3Matches from '../data/s3-matches.json';
 
 const title = "Tarjeta Roja TV - Partidos de Fútbol en Vivo Gratis";
 const description = "Tarjeta Roja TV online. Ver partidos de fútbol en vivo gratis hoy.";
-const keywords = "tarjeta roja, tarjeta roja tv, tarjeta roja en vivo, tarjeta roja online, tarjeta roja fútbol";
+const keywords = "tarjeta roja, tarjeta roja tv, tarjeta roja en vivo, tarjeta roja online, tarjeta roja fútbol, tarjeta roja directa, tarjeta roja pirlo tv, tarjeta roja partidos hoy, tarjeta roja tv en vivo";
 
 const filterCategory = "football";
 const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
@@ -36,6 +36,14 @@ const faqItems = [
   {
     question: "¿Es legal ver fútbol en Tarjeta Roja o sitios similares?",
     answer: "Las leyes sobre el consumo de streaming varían según el país. deportesenvivo.live actúa como directorio de streams públicos y no aloja ni distribuye contenido protegido directamente. Consulta la normativa de tu país para más información.",
+  },
+  {
+    question: "¿Tarjeta Roja es lo mismo que Rojadirecta?",
+    answer: "Son sitios distintos pero con el mismo objetivo: ofrecer streaming deportivo gratuito. 'Tarjeta roja directa' es una búsqueda muy común que combina ambos conceptos. En deportesenvivo.live encontrarás una alternativa que cubre lo mejor de ambos sitios.",
+  },
+  {
+    question: "¿Tarjeta Roja Pirlo TV son lo mismo?",
+    answer: "No son el mismo sitio, pero muchos usuarios los buscan juntos porque ambos ofrecen fútbol gratis online. En deportesenvivo.live tienes una sola plataforma que reemplaza a ambos, con tres servidores y programación actualizada cada 30 minutos.",
   },
 ];
 ---
@@ -76,8 +84,57 @@ const faqItems = [
       <p>
         Descubre también otras páginas del sitio como <a href="/futbol-libre">Fútbol Libre</a>, <a href="/pirlo-tv">Pirlo TV</a>, <a href="/roja-directa">Roja Directa</a> o <a href="/partidos-de-hoy">Partidos de Hoy</a> para encontrar siempre el partido que buscas. Comparte la cartelera deportiva del día con tus amigos en WhatsApp usando nuestra <a href="/compartir">herramienta de compartir</a>.
       </p>
+      <h3>Tarjeta Roja Directa — Fútbol en Vivo Ahora</h3>
+      <p>
+        La búsqueda <strong>tarjeta roja directa</strong> combina dos de los sitios más populares de streaming deportivo. En deportesenvivo.live unificamos esa experiencia: <strong>tarjeta roja tv en vivo</strong> con la estabilidad de rojadirecta. También puedes explorar <strong>tarjeta roja pirlo tv</strong> para más opciones de stream disponibles ahora mismo.
+      </p>
     </div>
 
     <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/tarjeta-roja-tv">Tarjeta Roja TV</a>
+        <a href="/tarjeta-roja-en-vivo">Tarjeta Roja en Vivo</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

@@ -9,7 +9,7 @@ import s3Matches from '../data/s3-matches.json';
 
 const title = "Roja Directa Online - Fútbol y Deportes en Vivo";
 const description = "Roja Directa en línea. Ver fútbol y deportes en vivo gratis hoy.";
-const keywords = "roja directa, rojadirecta, roja directa online, roja directa fútbol, ver roja directa";
+const keywords = "roja directa, rojadirecta, roja directa online, roja directa fútbol, ver roja directa, roja directa en vivo, roja directa hd, roja directa tv, roja directa partidos hoy";
 
 const faqItems = [
   {
@@ -31,6 +31,14 @@ const faqItems = [
   {
     question: "¿Roja Directa tiene app móvil?",
     answer: "deportesenvivo.live funciona perfectamente desde el navegador móvil sin necesidad de ninguna app. Es la solución más sencilla para ver fútbol en vivo en tu teléfono, sea Android o iPhone.",
+  },
+  {
+    question: "¿Roja Directa HD tiene partidos en alta definición?",
+    answer: "Sí. En deportesenvivo.live los streams se ofrecen en la máxima calidad disponible de cada fuente. Si el Servidor 1 tiene calidad baja, prueba el Servidor 2 o 3 para obtener mejor resolución en roja directa hd.",
+  },
+  {
+    question: "¿Cuál es el nuevo dominio de Roja Directa en 2026?",
+    answer: "Los dominios de roja directa cambian frecuentemente. deportesenvivo.live es la alternativa permanente y estable: siempre la misma URL, siempre disponible, con contenido actualizado cada 30 minutos sin necesidad de buscar el nuevo dominio.",
   },
 ];
 ---
@@ -71,8 +79,57 @@ const faqItems = [
       <p>
         Además del fútbol, en deportesenvivo.live encontrarás NBA en vivo, MLB, tenis Grand Slam, boxeo y mucho más. Explora también <a href="/rojadirecta-tv">Rojadirecta TV</a>, <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>, <a href="/tarjeta-roja">Tarjeta Roja</a> o <a href="/futbol-libre">Fútbol Libre</a> para más opciones de streaming gratuito.
       </p>
+      <h3>Roja Directa HD — Ver Deportes en Alta Definición</h3>
+      <p>
+        Si buscas <strong>roja directa hd</strong> para ver los partidos con la mejor calidad posible, en deportesenvivo.live lo tienes disponible. La plataforma ofrece streams en alta definición de <strong>roja directa tv</strong> con tres servidores para elegir el de mejor rendimiento. Consulta <strong>roja directa partidos hoy</strong> para ver la programación completa del día.
+      </p>
     </div>
 
     <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/la-roja-directa">La Roja Directa</a>
+        <a href="/rojadirecta-tv">Rojadirecta TV</a>
+        <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

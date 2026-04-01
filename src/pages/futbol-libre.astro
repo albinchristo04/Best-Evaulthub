@@ -9,7 +9,7 @@ import s3Matches from '../data/s3-matches.json';
 
 const title = "Fútbol Libre - Ver Fútbol Gratis Online en Vivo";
 const description = "Ver fútbol libre online gratis. Partidos en vivo hoy. Fútbol libre TV sin cortes.";
-const keywords = "fútbol libre, fútbol libre tv, ver fútbol libre, fútbol libre online, fútbol libre gratis";
+const keywords = "fútbol libre, futbol libre, fútbol libre tv, ver fútbol libre, fútbol libre online, fútbol libre gratis, futbol libre tv hoy, fútbol libre en vivo, ver futbol libre hoy";
 
 const filterCategory = "football";
 const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
@@ -36,6 +36,14 @@ const faqItems = [
   {
     question: "¿Qué hago si el stream de fútbol libre no carga?",
     answer: "Si un servidor no funciona, prueba cambiando al Servidor 2 o Servidor 3 haciendo clic en las pestañas de arriba. También puedes intentar recargar la página o limpiar la caché de tu navegador. Si el problema persiste, vuelve en unos minutos ya que los streams se actualizan continuamente.",
+  },
+  {
+    question: "¿Fútbol libre es lo mismo que fútbol para todos?",
+    answer: "Son términos relacionados: 'Fútbol para todos' fue una iniciativa argentina de TV abierta, mientras que 'fútbol libre' se refiere a ver fútbol gratis por internet. En deportesenvivo.live ofrecemos ambas experiencias: fútbol libre online, completamente gratis, para todos.",
+  },
+  {
+    question: "¿Dónde ver futbol libre tv hoy en vivo?",
+    answer: "Directamente en deportesenvivo.live. Tienes la programación completa de fútbol libre tv hoy con todos los partidos del día, horarios en tu zona horaria y tres servidores para garantizar disponibilidad. Sin registro, sin pago.",
   },
 ];
 ---
@@ -76,8 +84,57 @@ const faqItems = [
       <p>
         El <strong>fútbol libre online</strong> en deportesenvivo.live se actualiza cada 30 minutos con los partidos más recientes. Tanto si quieres ver el clásico de fin de semana, un partido de Champions League entre semana o un duelo de selecciones nacionales, aquí encontrarás siempre la transmisión disponible. Usa nuestra <a href="/compartir">herramienta de compartir</a> para enviar los partidos del día a tus amigos por WhatsApp o Telegram.
       </p>
+      <h3>Fútbol libre TV hoy — Todos los partidos en directo</h3>
+      <p>
+        <strong>Futbol libre tv</strong> es la expresión que une dos conceptos clave: fútbol gratuito y transmisión online. En deportesenvivo.live encuentras <strong>fútbol libre en vivo</strong> con la programación completa de hoy: LaLiga, Champions, Premier, Copa Libertadores y mucho más. Busca <strong>ver futbol libre hoy</strong> y llegarás siempre al mismo lugar — aquí, sin costo y sin complicaciones.
+      </p>
     </div>
 
     <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/futbol-libre-tv">Fútbol Libre TV</a>
+        <a href="/futbol-para-todos">Fútbol Para Todos</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

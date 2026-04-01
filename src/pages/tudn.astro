@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "TUDN en Vivo - Ver Deportes Gratis Online Hoy";
+const description = "TUDN en vivo gratis. Ver deportes online hoy sin registro. Alternativa a TUDN en vivo streaming. Fútbol, NFL, NBA y más.";
+const keywords = "tudn, tudn en vivo, tudn en vivo gratis, tudn deportes, ver tudn en vivo, tudn online, tudn streaming, tudn fútbol";
+
+const faqItems = [
+  {
+    question: "¿Qué es TUDN?",
+    answer: "TUDN (Televisa Univision Deportes Network) es una cadena de televisión deportiva de referencia para la comunidad hispana en Estados Unidos y México. Transmite fútbol, NFL, NBA, béisbol y más. En deportesenvivo.live encontrarás todos esos deportes en vivo gratis sin suscripción a cable.",
+  },
+  {
+    question: "¿Cómo ver TUDN en vivo gratis?",
+    answer: "En deportesenvivo.live puedes ver deportes en vivo completamente gratis sin necesidad de suscripción a TUDN ni cable. Simplemente abre el sitio, elige el partido y empieza a ver. Disponible en cualquier dispositivo con navegador.",
+  },
+  {
+    question: "¿TUDN transmite la Liga MX?",
+    answer: "Sí, TUDN es uno de los canales principales de la Liga MX. En deportesenvivo.live cubrimos partidos de Liga MX, Champions League, Premier League, NFL y mucho más. La programación se actualiza cada 30 minutos.",
+  },
+  {
+    question: "¿Puedo ver TUDN en vivo desde México?",
+    answer: "Sí, deportesenvivo.live está disponible en México, Estados Unidos, España y toda Latinoamérica sin restricciones geográficas. Los horarios se muestran en tu zona horaria local automáticamente.",
+  },
+  {
+    question: "¿TUDN en vivo funciona en el celular?",
+    answer: "Por supuesto. deportesenvivo.live funciona perfectamente en smartphones Android e iOS desde cualquier navegador. Sin apps, sin descargas, sin costos adicionales.",
+  },
+  {
+    question: "¿Qué deportes puedo ver como alternativa a TUDN?",
+    answer: "En deportesenvivo.live cubrimos fútbol (todas las ligas principales), NBA, MLB, NFL, UFC, tenis, boxeo y más. Es la mejor alternativa gratuita a TUDN para ver deportes en español.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/tudn"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>TUDN en Vivo</h1>
+      <p class="subtitle">Ver deportes en vivo gratis — la mejor alternativa a TUDN online sin cable</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={s2Matches} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={s3Matches} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>TUDN en Vivo Gratis — Sin Cable, Sin Suscripción</h2>
+      <p>
+        <strong>TUDN en vivo</strong> es la búsqueda favorita de millones de hispanos en Estados Unidos y México que quieren ver deportes en español sin pagar por cable. En deportesenvivo.live ofrecemos la mejor alternativa para <strong>ver TUDN en vivo gratis</strong>: fútbol, Liga MX, Champions League, NFL, NBA, MLB y mucho más, disponible desde cualquier dispositivo sin suscripción.
+      </p>
+      <p>
+        Si buscas <strong>TUDN deportes</strong> para seguir la Liga MX, los partidos de la selección mexicana o la NFL en español, aquí tienes todo disponible con tres servidores redundantes. No necesitas contratar cable ni suscribirte a ningún servicio de streaming de pago. La programación de <strong>TUDN online</strong> equivalente que ofrecemos se actualiza automáticamente cada 30 minutos.
+      </p>
+      <p>
+        ¿Quieres más opciones para ver deportes gratis? Visita también <a href="/partidos-de-hoy">Partidos de Hoy</a>, <a href="/futbol-libre">Fútbol Libre</a>, <a href="/pirlo-tv">Pirlo TV</a> o <a href="/livetv">LiveTV</a> para encontrar el stream que mejor funcione en tu conexión.
+      </p>
+
+      <h3>TUDN en vivo: Liga MX, NFL, NBA y más en español</h3>
+      <p>
+        <strong>TUDN streaming</strong> cubre los eventos más importantes del deporte para la comunidad hispana. En deportesenvivo.live encontrarás cobertura equivalente de los mismos eventos con comentarios disponibles en español, sin restricciones geográficas y completamente gratuito.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/livetv">LiveTV</a>
+        <a href="/partidos-en-vivo">Partidos en Vivo</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

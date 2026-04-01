@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Fútbol Para Todos en Vivo - Ver Gratis Online Hoy";
+const description = "Fútbol Para Todos en vivo gratis. Ver partidos de fútbol online hoy sin registro. Alternativa a fútbol para todos online.";
+const keywords = "fútbol para todos, futbol para todos, fútbol para todos en vivo, ver fútbol para todos, fútbol para todos online, fútbol para todos gratis";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Qué es Fútbol Para Todos?",
+    answer: "Fútbol Para Todos fue una iniciativa argentina que transmitía partidos de fútbol de forma gratuita por televisión abierta. Hoy, en deportesenvivo.live, ofrecemos el espíritu de ese proyecto: fútbol en vivo gratis para todos, en internet, sin suscripción ni registro.",
+  },
+  {
+    question: "¿Puedo ver fútbol para todos online gratis?",
+    answer: "Sí. En deportesenvivo.live puedes ver fútbol en vivo online gratis desde cualquier dispositivo. Tenemos partidos de las principales ligas del mundo disponibles las 24 horas con tres servidores distintos para garantizar siempre disponibilidad.",
+  },
+  {
+    question: "¿Qué partidos hay en fútbol para todos hoy?",
+    answer: "La programación incluye partidos de LaLiga, Premier League, Champions League, Serie A, Bundesliga, torneos sudamericanos como Copa Libertadores, y competiciones internacionales. Se actualiza automáticamente cada 30 minutos.",
+  },
+  {
+    question: "¿Fútbol para todos funciona en Argentina?",
+    answer: "Sí, deportesenvivo.live está disponible en Argentina y en toda Latinoamérica sin restricciones geográficas. Los horarios se muestran en tu zona horaria local automáticamente.",
+  },
+  {
+    question: "¿Cómo ver fútbol para todos en el celular?",
+    answer: "Abre deportesenvivo.live en el navegador de tu celular (Chrome, Safari o cualquier otro). No necesitas descargar ninguna app. Funciona perfectamente en Android e iOS.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/futbol-para-todos"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Fútbol Para Todos</h1>
+      <p class="subtitle">Ver fútbol gratis en vivo para todos — sin registro, sin pago, sin límites</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Fútbol Para Todos en Vivo — Streaming Gratuito</h2>
+      <p>
+        El concepto de <strong>fútbol para todos</strong> nació en Argentina como una iniciativa para democratizar el acceso al fútbol en televisión abierta. En deportesenvivo.live llevamos ese mismo espíritu al internet: <strong>ver fútbol para todos online</strong>, completamente gratis, sin suscripciones, desde cualquier dispositivo y en cualquier parte del mundo. No importa si estás en Argentina, México, España o cualquier otro país hispanohablante.
+      </p>
+      <p>
+        Nuestra plataforma ofrece <strong>fútbol para todos en vivo</strong> con tres servidores redundantes. Si uno falla, el siguiente está listo. La programación de hoy incluye partidos de LaLiga, Premier League, Champions League, Copa Libertadores, Eliminatorias y mucho más. Los horarios se adaptan automáticamente a tu zona horaria para que nunca te pierdas el saque inicial.
+      </p>
+      <p>
+        ¿Buscas más opciones? Visita también <a href="/futbol-libre">Fútbol Libre</a>, <a href="/futbol-libre-tv">Fútbol Libre TV</a>, <a href="/pirlo-tv">Pirlo TV</a> o <a href="/tarjeta-roja">Tarjeta Roja</a> para más fuentes de streaming futbolístico gratuito.
+      </p>
+
+      <h3>¿Por qué fútbol para todos es gratuito aquí?</h3>
+      <p>
+        deportesenvivo.live agrega transmisiones de múltiples fuentes públicas disponibles en internet. No requiere pago, no almacena datos personales y no tiene publicidad intrusiva dentro del reproductor. El único requisito es una conexión a internet estable.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/futbol-libre-tv">Fútbol Libre TV</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

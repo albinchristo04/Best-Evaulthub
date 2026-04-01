@@ -9,7 +9,7 @@ import s3Matches from '../data/s3-matches.json';
 
 const title = "Pirlo TV en Vivo - Ver Deportes Gratis";
 const description = "Pirlo TV en vivo gratis. Ver fútbol y deportes por internet sin registro.";
-const keywords = "pirlo tv, pirlo tv en vivo, pirlo tv hoy, ver pirlo tv, pirlo tv online";
+const keywords = "pirlo tv, pirlo tv en vivo, pirlo tv hoy, pirlotv, pirlo tv hd, pirlo tv online, pirlo tv rojadirecta, ver pirlo tv gratis, pirlo tv partidos hoy";
 
 const faqItems = [
   {
@@ -31,6 +31,14 @@ const faqItems = [
   {
     question: "¿Necesito VPN para ver Pirlo TV?",
     answer: "No necesitas VPN para acceder a deportesenvivo.live. El sitio está disponible globalmente sin restricciones geográficas. Accede directamente desde tu navegador en cualquier país.",
+  },
+  {
+    question: "¿Cuál es la diferencia entre Pirlo TV y PirloTV?",
+    answer: "Pirlo TV y PirloTV (sin espacio ni guion) hacen referencia al mismo tipo de servicio de streaming deportivo gratuito. En deportesenvivo.live encontrarás ambas experiencias en un solo sitio, con tres servidores y actualización constante.",
+  },
+  {
+    question: "¿Pirlo TV tiene retransmisiones de rojadirecta?",
+    answer: "Muchos usuarios buscan 'pirlo tv rojadirecta' porque ambos sitios son conocidos por sus streams deportivos gratuitos. En deportesenvivo.live combinamos lo mejor de ambas fuentes con múltiples servidores y cobertura completa de fútbol y otros deportes.",
   },
 ];
 ---
@@ -71,8 +79,57 @@ const faqItems = [
       <p>
         Para <strong>ver Pirlo TV online</strong> desde tu móvil, tablet o computadora, solo necesitas un navegador actualizado. Sin plugins, sin aplicaciones adicionales, sin complicaciones. Disfruta del deporte en vivo con la mejor calidad disponible y comparte los partidos con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a>.
       </p>
+      <h3>Pirlo TV HD — La mejor calidad de streaming</h3>
+      <p>
+        Si buscas <strong>pirlo tv hd</strong> para ver partidos en alta definición, en deportesenvivo.live ofrecemos streams en la máxima calidad disponible. También conocido como <strong>pirlotv</strong> (sin espacio), es el destino favorito de los aficionados al fútbol y los deportes en español. Busca <strong>pirlo tv rojadirecta</strong> y encontrarás aquí la mejor alternativa combinada.
+      </p>
     </div>
 
     <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/pirlotv">PirloTV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/rojadirecta-tv">Rojadirecta TV</a>
+        <a href="/la-roja-directa">La Roja Directa</a>
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

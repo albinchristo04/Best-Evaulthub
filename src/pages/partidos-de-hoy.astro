@@ -9,7 +9,7 @@ import s3Matches from '../data/s3-matches.json';
 
 const title = "Partidos de Hoy en Vivo - Calendario Deportivo Completo";
 const description = "Partidos de hoy en vivo. Calendario deportivo completo con todos los partidos de fútbol, NBA, MLB y más.";
-const keywords = "partidos de hoy, partidos hoy, partidos de hoy en vivo, ver partidos hoy, partidos de fútbol hoy";
+const keywords = "partidos de hoy, partidos hoy, partidos de hoy en vivo, ver partidos hoy, partidos de fútbol hoy, partidos de hoy méxico, partidos para hoy, qué partidos hay hoy, juegos de hoy, juegos para hoy";
 
 const today = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -33,6 +33,14 @@ const faqItems = [
   {
     question: "¿Puedo compartir los partidos de hoy con mis amigos?",
     answer: "Sí. Usa nuestra herramienta de compartir en /compartir para copiar la lista de partidos de hoy en formato Telegram o WhatsApp con un solo clic y enviársela a tus amigos.",
+  },
+  {
+    question: "¿Qué partidos hay hoy en México?",
+    answer: "En deportesenvivo.live encontrarás todos los partidos de hoy en México y el mundo: Liga MX, Champions League, Premier League, NBA y más. Los horarios se muestran en tu zona horaria local automáticamente.",
+  },
+  {
+    question: "¿Dónde ver juegos de hoy en vivo gratis?",
+    answer: "Directamente en deportesenvivo.live. Tienes la programación completa de juegos de hoy con fútbol, NBA, MLB y más deportes. Selecciona cualquier partido para verlo en vivo gratis sin registro.",
   },
 ];
 ---
@@ -70,8 +78,57 @@ const faqItems = [
       <p>
         Los <strong>partidos de hoy en vivo</strong> se marcan automáticamente con una insignia roja cuando están en curso. Puedes filtrar por deporte usando las categorías de la parte superior. También tienes la opción de compartir el calendario de partidos de hoy con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> con formato para Telegram y WhatsApp.
       </p>
+      <h3>Juegos de hoy en vivo — Fútbol, NBA, MLB y más</h3>
+      <p>
+        ¿Buscas <strong>juegos de hoy</strong> o <strong>juegos para hoy</strong>? La programación de deportesenvivo.live cubre todos los deportes: <strong>partidos de hoy México</strong> con Liga MX, selección nacional y torneos locales; <strong>partidos para hoy</strong> de las ligas europeas más importantes; y competiciones de NBA, MLB, NFL y tenis. Todo en un solo lugar, gratis y actualizado cada 30 minutos.
+      </p>
     </div>
 
     <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/partidos-en-vivo">Partidos en Vivo</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/tudn">TUDN en Vivo</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>
