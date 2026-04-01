@@ -47,7 +47,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=deportesenvivo --branch=main
+          command: pages deploy dist --project-name=best-evaulthub --branch=main
 
       - name: Ping IndexNow
         run: |
