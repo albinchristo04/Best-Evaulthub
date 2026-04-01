@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -9,19 +9,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: "cf-pages"
   cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,27 +33,21 @@ jobs:
       - name: Fetch match data
         run: node scripts/fetch-data.mjs
         env:
-          # Supabase env vars available at build time (optional)
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       - name: Build with Astro
-        run: npm run build
+        run: npx astro build
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: './dist'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=deportesenvivo --branch=main
 
       - name: Ping IndexNow
         run: |
@@ -73,6 +62,8 @@ jobs:
                 "https://deportesenvivo.live/futbol-libre/",
                 "https://deportesenvivo.live/pirlo-tv/",
                 "https://deportesenvivo.live/tarjeta-roja/",
-                "https://deportesenvivo.live/partidos-de-hoy/"
+                "https://deportesenvivo.live/partidos-de-hoy/",
+                "https://deportesenvivo.live/futbol-en-vivo/",
+                "https://deportesenvivo.live/partidos-en-vivo/"
               ]
             }' || true
