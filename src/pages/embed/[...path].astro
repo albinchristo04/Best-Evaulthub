@@ -44,7 +44,7 @@ const SUPABASE_KEY = import.meta.env.SUPABASE_ANON_KEY || 'sb_publishable_qk446p
     <iframe
       id="embed-player"
       src=""
-      allow="encrypted-media; autoplay"
+      allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"
       allowfullscreen
       style="width:100%;height:100%;border:none;"
       title={`Ver ${teams} en vivo`}
@@ -97,6 +97,14 @@ const SUPABASE_KEY = import.meta.env.SUPABASE_ANON_KEY || 'sb_publishable_qk446p
         }),
       }).catch(() => {});
     }
+  });
+</script>
+
+<!-- Popup / redirect blocker -->
+<script>
+  window.open = function() { return null; };
+  window.addEventListener('blur', () => {
+    setTimeout(() => window.focus(), 50);
   });
 </script>
 

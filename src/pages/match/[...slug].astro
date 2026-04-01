@@ -141,7 +141,7 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
       <iframe
         id="match-player"
         src=""
-        allow="encrypted-media; autoplay"
+        allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"
         allowfullscreen
         style="width:100%;height:100%;border:none;"
         title={`Ver ${teams} en vivo`}
@@ -353,6 +353,25 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
   }
 
   document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<!-- Popup / redirect blocker for embedded iframes -->
+<script>
+  // Block window.open on this page context
+  window.open = function() { return null; };
+
+  // Re-focus player if page loses focus (tab-under attack)
+  let playerFocused = false;
+  const player = document.getElementById('match-player');
+  if (player) {
+    player.addEventListener('mouseenter', () => { playerFocused = true; });
+    player.addEventListener('mouseleave', () => { playerFocused = false; });
+  }
+  window.addEventListener('blur', () => {
+    if (playerFocused) {
+      setTimeout(() => window.focus(), 50);
+    }
+  });
 </script>
 
 <style>

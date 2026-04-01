@@ -1,0 +1,6 @@
+/match/*
+  Permissions-Policy: window-management=(), popup=()
+  X-Frame-Options: SAMEORIGIN
+
+/embed/*
+  Permissions-Policy: window-management=(), popup=()
