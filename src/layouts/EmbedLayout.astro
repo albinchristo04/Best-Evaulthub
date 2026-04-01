@@ -7,12 +7,6 @@ const { title = 'Ver Partido en Vivo' } = Astro.props;
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-  <script type="text/javascript">
-    aclib.runPop({
-      zoneId: '11143722',
-    });
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
@@ -38,10 +32,5 @@ const { title = 'Ver Partido en Vivo' } = Astro.props;
 </head>
 <body>
   <slot />
-  <script type="text/javascript">
-    aclib.runAutoTag({
-      zoneId: 'ultxm9gycu',
-    });
-  </script>
 </body>
 </html>
