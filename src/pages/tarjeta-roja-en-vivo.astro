@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Tarjeta Roja en Vivo - Fútbol en Directo Gratis Hoy";
+const description = "Tarjeta Roja en vivo hoy. Ver fútbol en directo gratis sin registro. Partidos en vivo ahora con tarjeta roja tv online.";
+const keywords = "tarjeta roja en vivo, tarjeta roja en vivo hoy, tarjeta roja tv en vivo, ver tarjeta roja en vivo, tarjeta roja fútbol en vivo, tarjeta roja directo";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Qué es Tarjeta Roja en Vivo?",
+    answer: "Tarjeta Roja en Vivo es uno de los sitios más buscados para ver fútbol en directo gratis por internet. En deportesenvivo.live ofrecemos la misma experiencia: fútbol en vivo ahora, gratis, sin registro y con múltiples servidores para máxima disponibilidad.",
+  },
+  {
+    question: "¿Cómo ver Tarjeta Roja TV en vivo hoy?",
+    answer: "Entra a deportesenvivo.live, selecciona el partido que quieres ver de la lista de partidos de hoy y haz clic para verlo. No necesitas cuenta ni pago. Disponible en cualquier dispositivo.",
+  },
+  {
+    question: "¿Tarjeta Roja en vivo tiene todos los partidos de fútbol?",
+    answer: "Sí. Cubrimos LaLiga, Premier League, Champions League, Europa League, Serie A, Bundesliga, Copa del Rey, partidos de selecciones y mucho más. La programación se actualiza cada 30 minutos.",
+  },
+  {
+    question: "¿Puedo ver Tarjeta Roja en vivo desde el móvil?",
+    answer: "Por supuesto. deportesenvivo.live funciona perfectamente en Android e iOS desde cualquier navegador. Sin apps, sin instalaciones. Solo abre el sitio y empieza a ver el fútbol en directo.",
+  },
+  {
+    question: "¿Qué hago si Tarjeta Roja en vivo no carga?",
+    answer: "Prueba cambiando de servidor: haz clic en Servidor 2 o Servidor 3 en la parte superior. Si el problema persiste, espera unos segundos y recarga. Los streams se actualizan continuamente para garantizar la mejor disponibilidad.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/tarjeta-roja-en-vivo"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Tarjeta Roja en Vivo</h1>
+      <p class="subtitle">Ver fútbol en directo gratis ahora mismo — la mejor alternativa a Tarjeta Roja TV</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Tarjeta Roja en Vivo — Fútbol en Directo Gratis</h2>
+      <p>
+        <strong>Tarjeta Roja en vivo</strong> es la búsqueda preferida de millones de aficionados al fútbol que quieren ver sus partidos favoritos de forma gratuita. En deportesenvivo.live encontrarás todos los partidos de <strong>tarjeta roja tv en vivo</strong> hoy: LaLiga, Champions League, Premier League, Serie A y mucho más, disponibles en tres servidores distintos para máxima disponibilidad.
+      </p>
+      <p>
+        Si buscas <strong>ver tarjeta roja en vivo</strong> ahora mismo, aquí tienes la programación completa del día con indicadores EN VIVO en tiempo real. Cada partido está disponible en alta definición y con comentarios en español. No necesitas registrarte, no hay pagos y no hay límite de tiempo de visualización.
+      </p>
+      <p>
+        ¿No encuentras el partido que buscas? Prueba también con <a href="/tarjeta-roja">Tarjeta Roja</a>, <a href="/tarjeta-roja-tv">Tarjeta Roja TV</a>, <a href="/pirlo-tv">Pirlo TV</a> o <a href="/futbol-libre">Fútbol Libre</a>. Todas nuestras páginas comparten la misma programación actualizada y tres servidores redundantes.
+      </p>
+
+      <h3>Partidos disponibles en Tarjeta Roja en vivo hoy</h3>
+      <p>
+        La programación de <strong>tarjeta roja fútbol en vivo</strong> incluye partidos de las principales ligas europeas, competiciones internacionales, eliminatorias mundialistas y amistosos. Los horarios se muestran automáticamente en tu zona horaria local para que nunca te pierdas un saque inicial.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/tarjeta-roja-tv">Tarjeta Roja TV</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

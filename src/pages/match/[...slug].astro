@@ -312,10 +312,10 @@ const pageDesc = `Ver ${teams} en vivo hoy. ${league} en directo gratis. Streami
     function getShareUrl() { return encodeURIComponent(window.location.href); }
     function getShareText() { return encodeURIComponent(`⚽ Ver ${document.title} en vivo → ${window.location.href}`); }
 
-    const waBtn = document.getElementById('share-wa') as HTMLAnchorElement;
+    const waBtn = document.getElementById('share-wa');
     if (waBtn) waBtn.href = `https://wa.me/?text=${getShareText()}`;
 
-    const tgBtn = document.getElementById('share-tg') as HTMLAnchorElement;
+    const tgBtn = document.getElementById('share-tg');
     if (tgBtn) tgBtn.href = `https://t.me/share/url?url=${getShareUrl()}&text=${encodeURIComponent(`⚽ Ver en vivo: ${document.title}`)}`;
 
     document.getElementById('share-more')?.addEventListener('click', async () => {

@@ -91,7 +91,7 @@ const embedCode = `<iframe src="${embedUrl}" width="100%" height="500" framebord
 </style>
 
 <script>
-  const btn = document.getElementById('embedCopyBtn') as HTMLButtonElement | null;
+  const btn = document.getElementById('embedCopyBtn');
 
   btn?.addEventListener('click', async () => {
     const code = btn.dataset.code ?? '';

@@ -75,7 +75,7 @@ const SUPABASE_KEY = import.meta.env.SUPABASE_ANON_KEY || 'sb_publishable_qk446p
     const channels = event.channels || [];
     const embedUrl = channels[channelIdx]?.embedUrl || channels[0]?.embedUrl || '';
 
-    const player = document.getElementById('embed-player') as HTMLIFrameElement;
+    const player = document.getElementById('embed-player');
     if (player && embedUrl) {
       if (serverNum === 3) {
         player.removeAttribute('sandbox');

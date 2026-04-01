@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "PirloTV - Ver Deportes en Vivo Gratis HD";
+const description = "PirloTV en vivo gratis. Ver fútbol, NBA, MLB y más deportes online en HD sin registro. La mejor alternativa a pirlotv hoy.";
+const keywords = "pirlotv, pirlotv en vivo, pirlotv hd, pirlotv online, pirlotv fútbol, pirlotv gratis, pirlo tv, pirlotv partidos hoy";
+
+const faqItems = [
+  {
+    question: "¿Qué es PirloTV?",
+    answer: "PirloTV (también escrito Pirlo TV o pirlotv) es uno de los sitios de streaming deportivo gratuito más populares en español. Ofrece retransmisiones en vivo de fútbol, NBA, MLB, tenis y más. En deportesenvivo.live encontrarás la misma experiencia con servidores más estables y sin interrupciones.",
+  },
+  {
+    question: "¿PirloTV está disponible en 2026?",
+    answer: "Los dominios de pirlotv cambian frecuentemente debido a bloqueos regionales. Por eso deportesenvivo.live es la alternativa más confiable: siempre disponible, con tres servidores redundantes y actualización cada 30 minutos.",
+  },
+  {
+    question: "¿Cómo ver PirloTV en el móvil?",
+    answer: "Accede a deportesenvivo.live desde el navegador de tu móvil (Chrome, Safari, Firefox). No necesitas instalar ninguna app. El sitio está completamente optimizado para Android e iOS.",
+  },
+  {
+    question: "¿PirloTV tiene fútbol en HD?",
+    answer: "Sí, en deportesenvivo.live ofrecemos streams en la máxima calidad disponible de cada fuente. Si un servidor tiene baja calidad, cambia al Servidor 2 o Servidor 3 con un solo clic para obtener mejor resolución.",
+  },
+  {
+    question: "¿Pirlotv transmite partidos de Champions League?",
+    answer: "Sí. Encontrarás Champions League, Europa League, LaLiga, Premier League, Serie A, Bundesliga, Copa América, y todos los grandes torneos del mundo deportivo. La cartelera se actualiza automáticamente cada 30 minutos.",
+  },
+  {
+    question: "¿Necesito registrarme para ver pirlotv?",
+    answer: "No. En deportesenvivo.live no necesitas crear cuenta, dar tu correo ni ningún dato personal. Simplemente abre el sitio y empieza a ver. Es completamente gratis y sin registro.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/pirlotv"
+  pageType="hub"
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>PirloTV</h1>
+      <p class="subtitle">La mejor alternativa a pirlotv — ver deportes en vivo gratis sin registro</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={s1Matches} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={s2Matches} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={s3Matches} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>PirloTV en Vivo — Streaming Deportivo Gratuito</h2>
+      <p>
+        <strong>PirloTV</strong> es el término que millones de usuarios buscan cada día para encontrar transmisiones deportivas gratuitas en internet. En deportesenvivo.live ofrecemos una alternativa directa a <strong>pirlotv en vivo</strong>: mismos partidos, mayor estabilidad y tres servidores para que nunca pierdas un minuto de acción. Ver <strong>pirlotv online</strong> nunca fue tan fácil — abre el sitio, elige el partido y listo.
+      </p>
+      <p>
+        Si buscas <strong>pirlotv hd</strong> para ver fútbol con la mejor calidad, aquí encontrarás streams en alta definición de LaLiga, Premier League, Champions League, Serie A, Bundesliga, Ligue 1 y todas las grandes ligas del mundo. También cubrimos <strong>pirlotv NBA</strong>, MLB, tenis, UFC y mucho más. La programación de <strong>pirlotv partidos hoy</strong> se actualiza automáticamente cada 30 minutos con los eventos del día.
+      </p>
+      <p>
+        ¿Buscas más opciones? Visita también <a href="/pirlo-tv">Pirlo TV</a>, <a href="/tarjeta-roja">Tarjeta Roja</a>, <a href="/futbol-libre">Fútbol Libre</a> o <a href="/rojadirecta-tv">Rojadirecta TV</a> para acceder a más fuentes de streaming deportivo gratuito. Comparte los partidos con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> para WhatsApp y Telegram.
+      </p>
+
+      <h3>¿Por qué usar esta alternativa a PirloTV?</h3>
+      <p>
+        Los dominios de <strong>pirlotv</strong> cambian con frecuencia, lo que hace difícil encontrar el sitio actualizado. deportesenvivo.live es una solución permanente: misma URL, siempre activa, con contenido actualizado diariamente. Sin necesidad de buscar el nuevo dominio de pirlotv cada semana.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras alternativas populares</h3>
+      <div class="alt-links">
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/rojadirecta-tv">Rojadirecta TV</a>
+        <a href="/futbol-libre-tv">Fútbol Libre TV</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>
