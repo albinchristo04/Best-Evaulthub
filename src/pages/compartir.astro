@@ -10,12 +10,28 @@ import allMatches from '../data/all-matches.json';
   pageType="share"
 >
   <div class="container">
-    <div class="page-header">
-      <h1>📤 Compartir Partidos de Hoy</h1>
-      <p class="subtitle">Solo partidos de hoy · Organizados por servidor · Formato Telegram/WhatsApp</p>
+
+    <!-- Header -->
+    <div class="share-header">
+      <div class="share-header-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="share-title">Compartir Partidos de Hoy</h1>
+        <p class="share-subtitle">Selecciona partidos y copia en formato Telegram o WhatsApp</p>
+      </div>
     </div>
 
+    <!-- Stats bar -->
+    <div id="share-stats" class="share-stats" aria-live="polite"></div>
+
+    <!-- Main content injected by JS -->
     <div id="share-root" data-matches={JSON.stringify(allMatches)}></div>
+
   </div>
 </BaseLayout>
 
@@ -27,41 +43,34 @@ import allMatches from '../data/all-matches.json';
     cricket: '🏏', hockey: '🏒', boxing: '🥊', mma: '🥊', darts: '🎯', other: '🏆'
   };
   const CAT_LABEL: Record<string, string> = {
-    football: 'FÚTBOL', basketball: 'NBA / BALONCESTO', baseball: 'MLB / BÉISBOL',
-    tennis: 'TENIS', cricket: 'CRICKET', hockey: 'HOCKEY', boxing: 'BOXEO',
-    mma: 'MMA / UFC', darts: 'DARDOS', other: 'OTROS DEPORTES'
+    football: 'Fútbol', basketball: 'NBA / Baloncesto', baseball: 'MLB / Béisbol',
+    tennis: 'Tenis', cricket: 'Cricket', hockey: 'Hockey', boxing: 'Boxeo',
+    mma: 'MMA / UFC', darts: 'Dardos', other: 'Otros Deportes'
   };
   const SERVER_LABEL: Record<number, string> = { 1: 'Servidor 1', 2: 'Servidor 2', 3: 'Servidor 3' };
 
   interface Match {
-    id: string;
-    teams: string;
-    category: string;
-    startTime: number;
-    endTime: number;
-    server: number;
+    id: string; teams: string; category: string;
+    startTime: number; endTime: number; server: number;
   }
 
   function isToday(ts: number): boolean {
-    if (!ts) return true; // no timestamp = assume live/today
-    const d = new Date(ts * 1000);
-    const now = new Date();
-    return d.getFullYear() === now.getFullYear()
-      && d.getMonth() === now.getMonth()
-      && d.getDate() === now.getDate();
+    if (!ts) return true;
+    const d = new Date(ts * 1000), now = new Date();
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
   }
 
   function formatTime(ts: number): string {
-    if (!ts) return '🔴';
-    return new Intl.DateTimeFormat(navigator.language || 'es', {
-      hour: '2-digit', minute: '2-digit'
-    }).format(new Date(ts * 1000));
+    if (!ts) return 'EN VIVO';
+    return new Intl.DateTimeFormat(navigator.language || 'es', { hour: '2-digit', minute: '2-digit' }).format(new Date(ts * 1000));
   }
 
-  function formatDate(): string {
-    return new Intl.DateTimeFormat('es-ES', {
-      day: '2-digit', month: '2-digit', year: 'numeric'
-    }).format(new Date());
+  function formatDateLong(): string {
+    return new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: '2-digit', month: 'long' }).format(new Date());
+  }
+
+  function formatDateShort(): string {
+    return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date());
   }
 
   function isLive(m: Match): boolean {
@@ -69,15 +78,12 @@ import allMatches from '../data/all-matches.json';
     return m.startTime > 0 && now >= m.startTime && (m.endTime === 0 || now <= m.endTime);
   }
 
-  function buildServerText(matches: Match[], serverNum: number): string {
+  function buildText(matches: Match[], serverNum: number): string {
     const byCategory: Record<string, Match[]> = {};
-    matches.forEach(m => {
-      if (!byCategory[m.category]) byCategory[m.category] = [];
-      byCategory[m.category].push(m);
-    });
-    let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[serverNum]} · https://${SITE}\n`;
+    matches.forEach(m => { if (!byCategory[m.category]) byCategory[m.category] = []; byCategory[m.category].push(m); });
+    let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}\n${SERVER_LABEL[serverNum]} · https://${SITE}\n`;
     for (const [cat, evts] of Object.entries(byCategory)) {
-      text += `\n${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n\n`;
+      text += `\n${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat]?.toUpperCase() || cat.toUpperCase()}\n\n`;
       evts.forEach(m => {
         const live = isLive(m) ? ' 🔴 EN VIVO' : '';
         text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  https://${SITE}/match/${m.id}\n\n`;
@@ -88,8 +94,13 @@ import allMatches from '../data/all-matches.json';
   }
 
   function copyText(text: string, btn: HTMLButtonElement) {
-    const orig = btn.textContent!;
-    const done = () => { btn.textContent = '✅ Copiado!'; btn.disabled = true; setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000); };
+    const orig = btn.innerHTML;
+    const done = () => {
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+      btn.classList.add('copied');
+      btn.disabled = true;
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); btn.disabled = false; }, 2200);
+    };
     navigator.clipboard.writeText(text).then(done).catch(() => {
       const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
       document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
@@ -97,114 +108,149 @@ import allMatches from '../data/all-matches.json';
     });
   }
 
-  function renderServer(matches: Match[], serverNum: number, selected: Set<string>): string {
-    if (!matches.length) return `<p class="share-empty">Sin partidos de hoy en ${SERVER_LABEL[serverNum]}.</p>`;
+  function renderMatchList(matches: Match[], serverNum: number, selected: Set<string>): string {
+    if (!matches.length) return `<div class="share-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p>Sin partidos hoy en ${SERVER_LABEL[serverNum]}</p></div>`;
 
     const byCategory: Record<string, Match[]> = {};
     matches.forEach(m => { if (!byCategory[m.category]) byCategory[m.category] = []; byCategory[m.category].push(m); });
 
-    let html = `<div class="share-server-panel" data-server="${serverNum}">`;
-    html += `<div class="share-server-actions">
-      <button class="btn btn-primary share-copy-server" data-server="${serverNum}">📋 Copiar Servidor ${serverNum}</button>
-      <button class="btn btn-outline share-select-all" data-server="${serverNum}">☑ Todos</button>
-      <button class="btn btn-outline share-deselect-all" data-server="${serverNum}">☐ Ninguno</button>
-      <span class="share-count" data-server="${serverNum}">${matches.length} partidos</span>
-    </div>`;
-
+    let html = '';
     for (const [cat, evts] of Object.entries(byCategory)) {
       html += `<div class="share-category">
         <div class="share-cat-header">
-          <span>${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat}</span>
-          <button class="share-cat-copy btn btn-outline" data-server="${serverNum}" data-cat="${cat}">Copiar ${EMOJI[cat] || ''}</button>
+          <span class="share-cat-label">${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat}</span>
+          <button class="share-cat-copy btn-ghost-sm" data-server="${serverNum}" data-cat="${cat}" aria-label="Copiar ${CAT_LABEL[cat] || cat}">Copiar</button>
         </div>`;
       evts.forEach(m => {
         const live = isLive(m);
-        const chk = `chk-s${serverNum}-${m.id}`;
-        html += `<label class="share-match-row${live ? ' is-live' : ''}" for="${chk}">
-          <input type="checkbox" id="${chk}" data-id="${m.id}" data-server="${serverNum}" ${selected.has(m.id + '-' + serverNum) ? 'checked' : ''}/>
-          <span class="share-match-time">${live ? '🔴' : formatTime(m.startTime)}</span>
+        const chkId = `chk-s${serverNum}-${m.id}`;
+        const isChecked = selected.has(m.id + '-' + serverNum);
+        html += `<label class="share-match-row${live ? ' is-live' : ''}" for="${chkId}">
+          <input type="checkbox" id="${chkId}" data-id="${m.id}" data-server="${serverNum}" ${isChecked ? 'checked' : ''}/>
+          <span class="share-match-time${live ? ' live-text' : ''}">${live ? '🔴' : formatTime(m.startTime)}</span>
           <span class="share-match-teams">${m.teams}</span>
-          <span class="share-match-cat">${EMOJI[cat] || ''}</span>
+          ${live ? '<span class="live-pill">EN VIVO</span>' : ''}
         </label>`;
       });
       html += `</div>`;
     }
-    html += `</div>`;
     return html;
   }
 
   function render() {
     const root = document.getElementById('share-root');
+    const statsEl = document.getElementById('share-stats');
     if (!root) return;
 
     const allMatches: Match[] = JSON.parse(root.dataset.matches || '[]');
-
-    // Filter to today only, then split by server
     const todayMatches = allMatches.filter(m => isToday(m.startTime));
     const byServer: Record<number, Match[]> = { 1: [], 2: [], 3: [] };
     todayMatches.forEach(m => { if (byServer[m.server]) byServer[m.server].push(m); });
-
-    // Sort each server's matches by startTime
     [1, 2, 3].forEach(s => byServer[s].sort((a, b) => (a.startTime || 0) - (b.startTime || 0)));
 
-    // Selection state: keyed as "id-server" to allow same match on multiple servers
+    const liveCount = todayMatches.filter(m => isLive(m)).length;
     const selected = new Set<string>();
     todayMatches.forEach(m => selected.add(m.id + '-' + m.server));
 
-    function getServerMatches(serverNum: number) {
+    // Stats bar
+    if (statsEl) {
+      statsEl.innerHTML = `
+        <div class="stat-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>${formatDateLong()}</span>
+        </div>
+        <div class="stat-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>${todayMatches.length} partidos</span>
+        </div>
+        ${liveCount > 0 ? `<div class="stat-item stat-live"><span class="live-dot"></span><span>${liveCount} en vivo</span></div>` : ''}
+      `;
+    }
+
+    function getSelected(serverNum: number) {
       return byServer[serverNum].filter(m => selected.has(m.id + '-' + serverNum));
     }
 
     function updatePreview(serverNum: number) {
       const pre = document.getElementById(`preview-${serverNum}`);
-      if (pre) pre.textContent = buildServerText(getServerMatches(serverNum), serverNum);
       const countEl = document.querySelector<HTMLElement>(`.share-count[data-server="${serverNum}"]`);
-      if (countEl) countEl.textContent = `${getServerMatches(serverNum).length} / ${byServer[serverNum].length} partidos`;
+      const sel = getSelected(serverNum);
+      if (pre) pre.textContent = buildText(sel, serverNum);
+      if (countEl) countEl.textContent = `${sel.length} / ${byServer[serverNum].length}`;
     }
 
-    // --- Render tabs + panels ---
-    const totalToday = todayMatches.length;
-    let html = `<p class="share-today-count">📅 ${totalToday} partidos hoy · Selecciona y copia</p>`;
-
-    // Tabs
-    html += `<div class="server-tabs share-server-tabs" role="tablist">`;
+    // Build HTML
+    let html = `<div class="server-tabs share-server-tabs" role="tablist">`;
     [1, 2, 3].forEach(s => {
       const count = byServer[s].length;
-      html += `<button class="server-tab${s === 1 ? ' active' : ''}" role="tab" data-tab="${s}">
-        <span class="tab-dot"></span> Servidor ${s} <span class="tab-badge">${count}</span>
+      html += `<button class="server-tab${s === 1 ? ' active' : ''}" role="tab" aria-selected="${s === 1}" data-tab="${s}">
+        Servidor ${s}
+        <span class="tab-badge">${count}</span>
       </button>`;
     });
     html += `</div>`;
 
-    // Server panels (left: list, right: preview)
     [1, 2, 3].forEach(s => {
       html += `<div class="share-tab-panel${s === 1 ? '' : ' hidden'}" data-panel="${s}">
         <div class="share-layout">
+
+          <!-- Left: match list -->
           <div class="share-left">
-            <h2 class="share-section-title">Servidor ${s} — Partidos de hoy</h2>
-            ${renderServer(byServer[s], s, selected)}
+            <div class="share-toolbar">
+              <div class="share-toolbar-left">
+                <span class="share-count-badge" data-server="${s}">
+                  <span class="share-count" data-server="${s}">${byServer[s].length} / ${byServer[s].length}</span> seleccionados
+                </span>
+              </div>
+              <div class="share-toolbar-right">
+                <button class="btn-ghost-sm share-select-all" data-server="${s}">Todos</button>
+                <button class="btn-ghost-sm share-deselect-all" data-server="${s}">Ninguno</button>
+              </div>
+            </div>
+            <div class="share-match-list">
+              ${renderMatchList(byServer[s], s, selected)}
+            </div>
           </div>
+
+          <!-- Right: preview + copy -->
           <div class="share-right">
-            <h2 class="share-section-title">Vista previa · Servidor ${s}</h2>
-            <pre id="preview-${s}" class="share-preview">${buildServerText(byServer[s], s)}</pre>
+            <div class="share-preview-card">
+              <div class="share-preview-header">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Vista previa · Servidor ${s}
+              </div>
+              <pre id="preview-${s}" class="share-preview">${buildText(byServer[s], s)}</pre>
+              <div class="share-copy-actions">
+                <button class="share-copy-btn share-copy-server" data-server="${s}" aria-label="Copiar texto Servidor ${s}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copiar texto
+                </button>
+                <button class="share-whatsapp-btn share-copy-server" data-server="${s}" aria-label="Compartir por WhatsApp">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                  WhatsApp
+                </button>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>`;
     });
 
     root.innerHTML = html;
 
-    // Wire tab switching
+    // Tab switching
     root.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(tab => {
       tab.addEventListener('click', () => {
-        root.querySelectorAll('[data-tab]').forEach(t => t.classList.remove('active'));
+        root.querySelectorAll('[data-tab]').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
         root.querySelectorAll<HTMLElement>('[data-panel]').forEach(p => p.classList.add('hidden'));
         tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
         root.querySelector<HTMLElement>(`[data-panel="${tab.dataset.tab}"]`)?.classList.remove('hidden');
       });
     });
 
-    // Wire checkboxes
+    // Checkboxes
     root.querySelectorAll<HTMLInputElement>('input[type=checkbox][data-id]').forEach(chk => {
       chk.addEventListener('change', () => {
         const key = chk.dataset.id + '-' + chk.dataset.server;
@@ -213,15 +259,24 @@ import allMatches from '../data/all-matches.json';
       });
     });
 
-    // Copy server
-    root.querySelectorAll<HTMLButtonElement>('.share-copy-server').forEach(btn => {
+    // Copy server (text button)
+    root.querySelectorAll<HTMLButtonElement>('.share-copy-server[class*="share-copy-btn"],.share-copy-btn.share-copy-server').forEach(btn => {
       btn.addEventListener('click', () => {
         const s = Number(btn.dataset.server);
-        copyText(buildServerText(getServerMatches(s), s), btn);
+        copyText(buildText(getSelected(s), s), btn);
       });
     });
 
-    // Select/deselect all for server
+    // WhatsApp share
+    root.querySelectorAll<HTMLButtonElement>('.share-whatsapp-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const s = Number(btn.dataset.server);
+        const text = buildText(getSelected(s), s);
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      });
+    });
+
+    // Select/deselect all
     root.querySelectorAll<HTMLButtonElement>('.share-select-all').forEach(btn => {
       btn.addEventListener('click', () => {
         const s = Number(btn.dataset.server);
@@ -241,13 +296,14 @@ import allMatches from '../data/all-matches.json';
 
     // Copy by category
     root.querySelectorAll<HTMLButtonElement>('.share-cat-copy').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
         const s = Number(btn.dataset.server);
         const cat = btn.dataset.cat!;
         const catMatches = byServer[s].filter(m => m.category === cat && selected.has(m.id + '-' + s));
         if (!catMatches.length) return;
-        let text = `🔴 DEPORTES EN VIVO - ${formatDate()}\n${SERVER_LABEL[s]} · https://${SITE}\n\n`;
-        text += `${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat] || cat.toUpperCase()}\n\n`;
+        let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}\n${SERVER_LABEL[s]} · https://${SITE}\n\n`;
+        text += `${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat]?.toUpperCase() || cat.toUpperCase()}\n\n`;
         catMatches.forEach(m => {
           const live = isLive(m) ? ' 🔴 EN VIVO' : '';
           text += `• ${formatTime(m.startTime)}${live} ${m.teams}\n  https://${SITE}/match/${m.id}\n\n`;
@@ -257,7 +313,6 @@ import allMatches from '../data/all-matches.json';
       });
     });
 
-    // Init previews
     [1, 2, 3].forEach(s => updatePreview(s));
   }
 
@@ -265,97 +320,227 @@ import allMatches from '../data/all-matches.json';
 </script>
 
 <style>
-  .share-today-count {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin: 1rem 0 1.25rem;
-    font-weight: 600;
+  /* ── Page header ──────────────────────────────────────── */
+  .share-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 0 0;
   }
-  .share-server-tabs { margin-bottom: 0; }
-  .tab-badge {
-    display: inline-block;
-    background: var(--surface-hover);
-    border-radius: 999px;
-    font-size: 0.68rem;
-    padding: 1px 6px;
-    font-weight: 700;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-  .server-tab.active .tab-badge { background: rgba(255,255,255,0.2); }
 
+  .share-header-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--primary) 0%, #c53030 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(229, 62, 62, 0.35);
+  }
+
+  .share-title {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  .share-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Stats bar ────────────────────────────────────────── */
+  .share-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-height: 44px;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .stat-live {
+    color: var(--primary);
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+    animation: pulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ── Tabs ─────────────────────────────────────────────── */
+  .share-server-tabs { margin-bottom: 0; }
+
+  .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    padding: 1px 7px;
+    font-weight: 700;
+    min-width: 22px;
+  }
+
+  .server-tab:not(.active) .tab-badge {
+    background: var(--surface-hover);
+  }
+
+  /* ── Tab panels ───────────────────────────────────────── */
   .share-tab-panel { margin-top: 1.25rem; }
   .share-tab-panel.hidden { display: none; }
 
   .share-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 380px;
     gap: 1.5rem;
+    align-items: start;
   }
-  @media (max-width: 900px) { .share-layout { grid-template-columns: 1fr; } }
 
-  .share-section-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
+  @media (max-width: 960px) {
+    .share-layout { grid-template-columns: 1fr; }
   }
-  .share-server-actions {
+
+  /* ── Toolbar ──────────────────────────────────────────── */
+  .share-toolbar {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
   }
-  .share-count {
-    margin-left: auto;
+
+  .share-toolbar-left { display: flex; align-items: center; gap: 0.5rem; }
+  .share-toolbar-right { display: flex; align-items: center; gap: 0.375rem; }
+
+  .share-count-badge {
     font-size: 0.78rem;
     color: var(--text-muted);
     font-weight: 600;
   }
-  .share-category { margin-bottom: 1.25rem; }
+
+  .share-count {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── Ghost small button ───────────────────────────────── */
+  .btn-ghost-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: inherit;
+    min-height: 30px;
+  }
+
+  .btn-ghost-sm:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+
+  /* ── Match list ───────────────────────────────────────── */
+  .share-match-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+  }
+
+  .share-category { border-bottom: 1px solid var(--border); }
+  .share-category:last-child { border-bottom: none; }
+
   .share-cat-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 0.78rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255,255,255,0.025);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .share-cat-label {
+    font-size: 0.72rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.35rem;
-    padding: 0.3rem 0.5rem;
-    background: var(--surface);
-    border-radius: 6px;
+    letter-spacing: 0.07em;
   }
-  .share-cat-copy { font-size: 0.7rem; padding: 0.15rem 0.5rem; }
 
   .share-match-row {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.4rem 0.5rem;
-    border-radius: 6px;
+    gap: 0.65rem;
+    padding: 0.6rem 0.75rem;
     cursor: pointer;
     transition: background 0.12s;
+    min-height: 44px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
   }
+
+  .share-match-row:last-child { border-bottom: none; }
   .share-match-row:hover { background: var(--surface-hover); }
-  .share-match-row.is-live { border-left: 2px solid var(--primary); padding-left: 0.4rem; }
-  .share-match-row input[type=checkbox] { accent-color: var(--primary); flex-shrink: 0; }
+
+  .share-match-row.is-live {
+    border-left: 2px solid var(--primary);
+  }
+
+  .share-match-row input[type=checkbox] {
+    accent-color: var(--primary);
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
   .share-match-time {
-    font-size: 0.78rem;
+    font-size: 0.775rem;
     color: var(--accent);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-    min-width: 2.2rem;
-    font-weight: 600;
+    min-width: 2.8rem;
+    font-weight: 700;
   }
+
+  .share-match-time.live-text { color: var(--primary); }
+
   .share-match-teams {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: var(--text);
     font-weight: 600;
     flex: 1;
@@ -364,33 +549,118 @@ import allMatches from '../data/all-matches.json';
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .share-match-cat { font-size: 0.85rem; flex-shrink: 0; }
 
-  .share-right { position: sticky; top: 80px; align-self: start; }
-  .share-preview {
+  .live-pill {
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+    background: rgba(229, 62, 62, 0.12);
+    border: 1px solid rgba(229, 62, 62, 0.3);
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+
+  /* ── Preview card ─────────────────────────────────────── */
+  .share-right { position: sticky; top: 80px; }
+
+  .share-preview-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.875rem;
-    font-size: 0.76rem;
-    line-height: 1.65;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .share-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.025);
+  }
+
+  .share-preview {
+    display: block;
+    padding: 1rem;
+    font-size: 0.775rem;
+    line-height: 1.7;
     color: var(--text);
     white-space: pre-wrap;
     word-break: break-word;
-    max-height: 55vh;
+    max-height: 48vh;
     overflow-y: auto;
-    font-family: 'Courier New', monospace;
+    font-family: 'Courier New', 'Consolas', monospace;
+    background: transparent;
+    border: none;
+    margin: 0;
   }
 
+  /* ── Copy actions ─────────────────────────────────────── */
+  .share-copy-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .share-copy-btn,
+  .share-whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, transform 0.1s;
+    font-family: inherit;
+    min-height: 44px;
+  }
+
+  .share-copy-btn {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(229,62,62,0.3);
+  }
+
+  .share-copy-btn:hover { opacity: 0.88; }
+  .share-copy-btn:active { transform: scale(0.97); }
+  .share-copy-btn.copied { background: var(--accent); box-shadow: none; }
+  .share-copy-btn:disabled { cursor: default; }
+
+  .share-whatsapp-btn {
+    background: #25D366;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+  }
+
+  .share-whatsapp-btn:hover { opacity: 0.88; }
+  .share-whatsapp-btn:active { transform: scale(0.97); }
+
+  /* ── Empty state ──────────────────────────────────────── */
   .share-empty {
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3rem 1.5rem;
     text-align: center;
     color: var(--text-muted);
     font-size: 0.9rem;
     border: 1px dashed var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
   }
-
-  /* copy button is below the preview */
-  .share-right .share-section-title + .share-preview { margin-bottom: 0.75rem; }
 </style>
