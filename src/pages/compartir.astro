@@ -29,6 +29,9 @@ import allMatches from '../data/all-matches.json';
     <!-- Stats bar -->
     <div id="share-stats" class="share-stats" aria-live="polite"></div>
 
+    <!-- Timezone picker (rendered by JS) -->
+    <div id="tz-picker"></div>
+
     <!-- Main content injected by JS -->
     <div id="share-root" data-matches={JSON.stringify(allMatches)}></div>
 
@@ -37,6 +40,29 @@ import allMatches from '../data/all-matches.json';
 
 <script>
   const SITE = 'deportesenvivo.live';
+
+  const TIMEZONES: { label: string; flag: string; tz: string | null }[] = [
+    { label: 'Local',      flag: '🌐', tz: null },
+    { label: 'España',     flag: '🇪🇸', tz: 'Europe/Madrid' },
+    { label: 'México',     flag: '🇲🇽', tz: 'America/Mexico_City' },
+    { label: 'Argentina',  flag: '🇦🇷', tz: 'America/Argentina/Buenos_Aires' },
+    { label: 'Colombia',   flag: '🇨🇴', tz: 'America/Bogota' },
+    { label: 'Perú',       flag: '🇵🇪', tz: 'America/Lima' },
+    { label: 'Chile',      flag: '🇨🇱', tz: 'America/Santiago' },
+    { label: 'Venezuela',  flag: '🇻🇪', tz: 'America/Caracas' },
+    { label: 'India',      flag: '🇮🇳', tz: 'Asia/Kolkata' },
+    { label: 'Brasil',     flag: '🇧🇷', tz: 'America/Sao_Paulo' },
+    { label: 'USA (ET)',   flag: '🇺🇸', tz: 'America/New_York' },
+    { label: 'USA (PT)',   flag: '🇺🇸', tz: 'America/Los_Angeles' },
+    { label: 'UK',         flag: '🇬🇧', tz: 'Europe/London' },
+    { label: 'Alemania',   flag: '🇩🇪', tz: 'Europe/Berlin' },
+    { label: 'Arabia',     flag: '🇸🇦', tz: 'Asia/Riyadh' },
+    { label: 'Japón',      flag: '🇯🇵', tz: 'Asia/Tokyo' },
+    { label: 'Australia',  flag: '🇦🇺', tz: 'Australia/Sydney' },
+  ];
+
+  // Module-level timezone state — survives tab switches and checkbox changes
+  let currentTz: string | null = null;
 
   const EMOJI: Record<string, string> = {
     football: '⚽', basketball: '🏀', baseball: '⚾', tennis: '🎾',
@@ -60,9 +86,18 @@ import allMatches from '../data/all-matches.json';
     return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
   }
 
-  function formatTime(ts: number): string {
+  function formatTime(ts: number, tz?: string | null): string {
     if (!ts) return 'EN VIVO';
-    return new Intl.DateTimeFormat(navigator.language || 'es', { hour: '2-digit', minute: '2-digit' }).format(new Date(ts * 1000));
+    const resolvedTz = tz !== undefined ? tz : currentTz;
+    const opts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+    if (resolvedTz) opts.timeZone = resolvedTz;
+    return new Intl.DateTimeFormat(navigator.language || 'es', opts).format(new Date(ts * 1000));
+  }
+
+  function tzLabel(): string {
+    if (!currentTz) return '';
+    const entry = TIMEZONES.find(t => t.tz === currentTz);
+    return entry ? ` (${entry.flag} ${entry.label})` : '';
   }
 
   function formatDateLong(): string {
@@ -81,7 +116,8 @@ import allMatches from '../data/all-matches.json';
   function buildText(matches: Match[], serverNum: number): string {
     const byCategory: Record<string, Match[]> = {};
     matches.forEach(m => { if (!byCategory[m.category]) byCategory[m.category] = []; byCategory[m.category].push(m); });
-    let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}\n${SERVER_LABEL[serverNum]} · https://${SITE}\n`;
+    const tzSuffix = tzLabel();
+    let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}${tzSuffix}\n${SERVER_LABEL[serverNum]} · https://${SITE}\n`;
     for (const [cat, evts] of Object.entries(byCategory)) {
       text += `\n${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat]?.toUpperCase() || cat.toUpperCase()}\n\n`;
       evts.forEach(m => {
@@ -127,7 +163,7 @@ import allMatches from '../data/all-matches.json';
         const isChecked = selected.has(m.id + '-' + serverNum);
         html += `<label class="share-match-row${live ? ' is-live' : ''}" for="${chkId}">
           <input type="checkbox" id="${chkId}" data-id="${m.id}" data-server="${serverNum}" ${isChecked ? 'checked' : ''}/>
-          <span class="share-match-time${live ? ' live-text' : ''}">${live ? '🔴' : formatTime(m.startTime)}</span>
+          <span class="share-match-time${live ? ' live-text' : ''}" data-ts="${m.startTime}">${live ? '🔴' : formatTime(m.startTime)}</span>
           <span class="share-match-teams">${m.teams}</span>
           ${live ? '<span class="live-pill">EN VIVO</span>' : ''}
         </label>`;
@@ -135,6 +171,27 @@ import allMatches from '../data/all-matches.json';
       html += `</div>`;
     }
     return html;
+  }
+
+  function renderTzPicker() {
+    const el = document.getElementById('tz-picker');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="tz-bar">
+        <div class="tz-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Horario:
+        </div>
+        <div class="tz-pills" role="group" aria-label="Seleccionar zona horaria">
+          ${TIMEZONES.map(t => `
+            <button
+              class="tz-pill${t.tz === currentTz ? ' active' : ''}"
+              data-tz="${t.tz ?? ''}"
+              aria-pressed="${t.tz === currentTz}"
+            >${t.flag} ${t.label}</button>
+          `).join('')}
+        </div>
+      </div>`;
   }
 
   function render() {
@@ -179,7 +236,17 @@ import allMatches from '../data/all-matches.json';
       if (countEl) countEl.textContent = `${sel.length} / ${byServer[serverNum].length}`;
     }
 
-    // Build HTML
+    // Update all visible time spans + all previews (called on tz change)
+    function applyTimezone() {
+      document.querySelectorAll<HTMLElement>('.share-match-time[data-ts]').forEach(el => {
+        const ts = Number(el.dataset.ts);
+        if (!ts) return;
+        el.textContent = formatTime(ts);
+      });
+      [1, 2, 3].forEach(s => updatePreview(s));
+    }
+
+    // Build HTML — server tabs
     let html = `<div class="server-tabs share-server-tabs" role="tablist">`;
     [1, 2, 3].forEach(s => {
       const count = byServer[s].length;
@@ -193,8 +260,6 @@ import allMatches from '../data/all-matches.json';
     [1, 2, 3].forEach(s => {
       html += `<div class="share-tab-panel${s === 1 ? '' : ' hidden'}" data-panel="${s}">
         <div class="share-layout">
-
-          <!-- Left: match list -->
           <div class="share-left">
             <div class="share-toolbar">
               <div class="share-toolbar-left">
@@ -211,8 +276,6 @@ import allMatches from '../data/all-matches.json';
               ${renderMatchList(byServer[s], s, selected)}
             </div>
           </div>
-
-          <!-- Right: preview + copy -->
           <div class="share-right">
             <div class="share-preview-card">
               <div class="share-preview-header">
@@ -225,19 +288,20 @@ import allMatches from '../data/all-matches.json';
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   Copiar texto
                 </button>
-                <button class="share-whatsapp-btn share-copy-server" data-server="${s}" aria-label="Compartir por WhatsApp">
+                <button class="share-whatsapp-btn" data-server="${s}" aria-label="Compartir por WhatsApp">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
                   WhatsApp
                 </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>`;
     });
 
     root.innerHTML = html;
+
+    // ── Wire events ──────────────────────────────────────────
 
     // Tab switching
     root.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(tab => {
@@ -259,8 +323,8 @@ import allMatches from '../data/all-matches.json';
       });
     });
 
-    // Copy server (text button)
-    root.querySelectorAll<HTMLButtonElement>('.share-copy-server[class*="share-copy-btn"],.share-copy-btn.share-copy-server').forEach(btn => {
+    // Copy server button
+    root.querySelectorAll<HTMLButtonElement>('.share-copy-btn.share-copy-server').forEach(btn => {
       btn.addEventListener('click', () => {
         const s = Number(btn.dataset.server);
         copyText(buildText(getSelected(s), s), btn);
@@ -302,7 +366,7 @@ import allMatches from '../data/all-matches.json';
         const cat = btn.dataset.cat!;
         const catMatches = byServer[s].filter(m => m.category === cat && selected.has(m.id + '-' + s));
         if (!catMatches.length) return;
-        let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}\n${SERVER_LABEL[s]} · https://${SITE}\n\n`;
+        let text = `🔴 DEPORTES EN VIVO — ${formatDateShort()}${tzLabel()}\n${SERVER_LABEL[s]} · https://${SITE}\n\n`;
         text += `${EMOJI[cat] || '🏆'} ${CAT_LABEL[cat]?.toUpperCase() || cat.toUpperCase()}\n\n`;
         catMatches.forEach(m => {
           const live = isLive(m) ? ' 🔴 EN VIVO' : '';
@@ -313,10 +377,28 @@ import allMatches from '../data/all-matches.json';
       });
     });
 
+    // Timezone pill clicks
+    document.querySelectorAll<HTMLButtonElement>('.tz-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        currentTz = pill.dataset.tz || null;
+        // Update active state
+        document.querySelectorAll('.tz-pill').forEach(p => {
+          const active = (p as HTMLButtonElement).dataset.tz === (currentTz ?? '');
+          p.classList.toggle('active', active);
+          p.setAttribute('aria-pressed', String(active));
+        });
+        // Update times in DOM + previews (no full re-render → preserves checkboxes)
+        applyTimezone();
+      });
+    });
+
     [1, 2, 3].forEach(s => updatePreview(s));
   }
 
-  document.addEventListener('DOMContentLoaded', render);
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTzPicker();
+    render();
+  });
 </script>
 
 <style>
@@ -359,11 +441,12 @@ import allMatches from '../data/all-matches.json';
     align-items: center;
     gap: 1.25rem;
     flex-wrap: wrap;
-    margin: 1.25rem 0;
+    margin: 1.25rem 0 0;
     padding: 0.75rem 1rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
     font-size: 0.8125rem;
     color: var(--text-muted);
     font-weight: 600;
@@ -376,9 +459,7 @@ import allMatches from '../data/all-matches.json';
     gap: 0.4rem;
   }
 
-  .stat-live {
-    color: var(--primary);
-  }
+  .stat-live { color: var(--primary); }
 
   .live-dot {
     width: 8px;
@@ -387,6 +468,75 @@ import allMatches from '../data/all-matches.json';
     background: var(--primary);
     animation: pulse 1.5s ease-in-out infinite;
     flex-shrink: 0;
+  }
+
+  /* ── Timezone picker ──────────────────────────────────── */
+  .tz-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .tz-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tz-pills {
+    display: flex;
+    gap: 0.375rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+    flex: 1;
+  }
+
+  .tz-pills::-webkit-scrollbar { display: none; }
+
+  .tz-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.775rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: inherit;
+    min-height: 30px;
+    flex-shrink: 0;
+  }
+
+  .tz-pill:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+
+  .tz-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
   }
 
   /* ── Tabs ─────────────────────────────────────────────── */
@@ -404,9 +554,7 @@ import allMatches from '../data/all-matches.json';
     min-width: 22px;
   }
 
-  .server-tab:not(.active) .tab-badge {
-    background: var(--surface-hover);
-  }
+  .server-tab:not(.active) .tab-badge { background: var(--surface-hover); }
 
   /* ── Tab panels ───────────────────────────────────────── */
   .share-tab-panel { margin-top: 1.25rem; }
@@ -439,16 +587,8 @@ import allMatches from '../data/all-matches.json';
   .share-toolbar-left { display: flex; align-items: center; gap: 0.5rem; }
   .share-toolbar-right { display: flex; align-items: center; gap: 0.375rem; }
 
-  .share-count-badge {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-weight: 600;
-  }
-
-  .share-count {
-    color: var(--accent);
-    font-weight: 700;
-  }
+  .share-count-badge { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+  .share-count { color: var(--accent); font-weight: 700; }
 
   /* ── Ghost small button ───────────────────────────────── */
   .btn-ghost-sm {
@@ -515,10 +655,7 @@ import allMatches from '../data/all-matches.json';
 
   .share-match-row:last-child { border-bottom: none; }
   .share-match-row:hover { background: var(--surface-hover); }
-
-  .share-match-row.is-live {
-    border-left: 2px solid var(--primary);
-  }
+  .share-match-row.is-live { border-left: 2px solid var(--primary); }
 
   .share-match-row input[type=checkbox] {
     accent-color: var(--primary);
@@ -535,6 +672,7 @@ import allMatches from '../data/all-matches.json';
     white-space: nowrap;
     min-width: 2.8rem;
     font-weight: 700;
+    transition: color 0.15s;
   }
 
   .share-match-time.live-text { color: var(--primary); }
