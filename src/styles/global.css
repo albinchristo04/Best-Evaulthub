@@ -829,12 +829,11 @@ select {
   transition: transform 0.2s;
 }
 
-.faq-item.open .faq-question svg {
+.faq-item[open] .faq-question svg {
   transform: rotate(180deg);
 }
 
 .faq-answer {
-  display: none;
   padding: 0 20px 16px;
   background: var(--surface);
   color: var(--text-muted);
@@ -842,10 +841,6 @@ select {
   line-height: 1.7;
   border-top: 1px solid var(--border);
   padding-top: 14px;
-}
-
-.faq-item.open .faq-answer {
-  display: block;
 }
 
 /* ============================================================
