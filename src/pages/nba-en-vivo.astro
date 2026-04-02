@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "NBA en Vivo - Ver Baloncesto Gratis Online Hoy";
+const description = "Ver NBA en vivo gratis hoy. Partidos de baloncesto NBA en directo sin registro. NBA online gratis en español ahora.";
+const keywords = "nba en vivo, ver nba gratis, nba hoy, nba en directo, nba online, ver nba en español, nba partidos hoy, nba live gratis, baloncesto nba en vivo";
+
+const filterCategory = "basketball";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Dónde ver la NBA en vivo gratis?",
+    answer: "En deportesenvivo.live puedes ver la NBA en vivo gratis sin suscripción. Entra al sitio, selecciona la pestaña de baloncesto, elige el partido de NBA del día y haz clic en 'Ver en vivo'. Sin registro, sin pago, disponible desde cualquier país.",
+  },
+  {
+    question: "¿A qué hora son los partidos de NBA hoy?",
+    answer: "Los partidos de NBA se juegan principalmente por la noche en horario estadounidense (ET). Desde España y Latinoamérica, los partidos suelen comenzar entre las 1:00 y las 4:00 de la madrugada. En deportesenvivo.live los horarios se muestran en tu zona horaria local automáticamente.",
+  },
+  {
+    question: "¿Qué canal transmite la NBA en español?",
+    answer: "La NBA en español se transmite en NBA TV, ESPN Deportes y TNT Sports en varios países. En deportesenvivo.live ofrecemos una alternativa gratuita para ver los partidos de la NBA sin necesidad de suscripción a ningún canal de pago.",
+  },
+  {
+    question: "¿Puedo ver los Playoffs de NBA gratis?",
+    answer: "Sí. En deportesenvivo.live encontrarás streaming gratuito de los Playoffs de NBA, incluyendo las rondas de conferencia, las Finales de Conferencia Este y Oeste, y las Finales de la NBA. Todos los partidos disponibles con múltiples servidores.",
+  },
+  {
+    question: "¿Cuándo empieza la temporada de NBA?",
+    answer: "La temporada regular de NBA comienza en octubre y finaliza en abril. Los Playoffs se juegan de abril a junio, con las Finales de la NBA generalmente en junio. En deportesenvivo.live cubrimos toda la temporada: pretemporada, temporada regular y playoffs.",
+  },
+  {
+    question: "¿Qué equipos de NBA son los más populares?",
+    answer: "Los equipos de NBA más seguidos en español son los Lakers de Los Ángeles, Golden State Warriors, Miami Heat, Boston Celtics, Chicago Bulls y San Antonio Spurs. En deportesenvivo.live encontrarás los partidos de todos los 30 equipos de la NBA cuando se transmitan.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/nba-en-vivo"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>NBA en Vivo</h1>
+      <p class="subtitle">Ver baloncesto NBA gratis online — partidos en directo sin registro</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver NBA en Vivo Online — Baloncesto Gratis en Español</h2>
+      <p>
+        La <strong>NBA en vivo</strong> es la liga de baloncesto más importante y seguida del mundo. En deportesenvivo.live ofrecemos streaming gratuito de los <strong>partidos de NBA hoy</strong>: temporada regular, Playoffs y Finales de la NBA. Sigue a los Lakers, Warriors, Heat, Celtics y todos los equipos de la liga sin pagar por NBA League Pass ni ningún otro servicio de pago.
+      </p>
+      <p>
+        Para <strong>ver NBA gratis</strong> en nuestro sitio, selecciona la pestaña de baloncesto o busca directamente el partido que te interesa. Los horarios se adaptan automáticamente a tu zona horaria local. Cuando un partido de <strong>NBA directo</strong> está en curso verás el indicador EN VIVO en rojo. Cambia de servidor si alguno falla. Visita también <a href="/partidos-en-vivo">partidos en vivo</a> o <a href="/livetv">LiveTV</a> para más deportes en streaming.
+      </p>
+      <p>
+        ¿Quieres <strong>ver la NBA en español</strong> sin pagar? deportesenvivo.live es la solución: acceso gratuito desde España, México, Argentina y cualquier país hispanohablante. Los comentarios disponibles pueden variar según la fuente del stream.
+      </p>
+      <h3>NBA partidos hoy — Temporada regular y Playoffs</h3>
+      <p>
+        Los partidos de <strong>NBA en vivo</strong> más esperados de la temporada son los duelos entre Los Lakers y los Warriors, el clásico Heat vs Celtics, y los partidos de las Finales de la NBA. En deportesenvivo.live encontrarás todos estos encuentros cuando se jueguen, con tres servidores y actualización automática cada 30 minutos.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras secciones populares</h3>
+      <div class="alt-links">
+        <a href="/partidos-en-vivo">Partidos en Vivo</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+        <a href="/livetv">LiveTV</a>
+        <a href="/tudn">TUDN</a>
+        <a href="/champions-league">Champions League</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/roja-directa">Roja Directa</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

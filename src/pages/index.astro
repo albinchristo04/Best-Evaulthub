@@ -32,6 +32,22 @@ const faqItems = [
     question: "¿Los partidos se actualizan automáticamente?",
     answer: "Sí. Nuestro sistema obtiene los datos de los partidos del día automáticamente. La programación se actualiza cada 30 minutos, por lo que siempre verás los partidos más recientes disponibles para hoy.",
   },
+  {
+    question: "¿Cuál es la mejor alternativa a Rojadirecta en 2026?",
+    answer: "deportesenvivo.live es la mejor alternativa a Rojadirecta en 2026. Ofrece el mismo contenido de fútbol en vivo y deportes internacionales, con tres servidores redundantes, sin registro, sin descargas y completamente gratis. También puedes visitar nuestras páginas de Roja Directa, Tarjeta Roja y Fútbol Libre para más opciones.",
+  },
+  {
+    question: "¿Cuál es la mejor alternativa a Pirlo TV?",
+    answer: "deportesenvivo.live es la alternativa más completa a Pirlo TV. Mientras Pirlo TV se especializa en deportes internacionales, deportesenvivo.live cubre fútbol, NBA, MLB, tenis y más con tres servidores distintos. No necesitas registro y funciona en cualquier dispositivo.",
+  },
+  {
+    question: "¿Cómo ver el Champions League en vivo gratis?",
+    answer: "Puedes ver el Champions League en vivo gratis en deportesenvivo.live. Cuando haya partidos de UEFA Champions League programados, aparecerán automáticamente en el calendario del día. También tenemos una página dedicada en /champions-league con información completa y los partidos disponibles.",
+  },
+  {
+    question: "¿Qué es deportesenvivo.live?",
+    answer: "deportesenvivo.live es un agregador de streaming deportivo en español que reúne transmisiones de fútbol, NBA, MLB y otros deportes de todo el mundo en un solo lugar. Es gratuito, no requiere registro, y funciona como directorio de canales y partidos en vivo actualizados cada 30 minutos.",
+  },
 ];
 
 const websiteJsonLd = {
@@ -41,11 +57,28 @@ const websiteJsonLd = {
   "url": "https://deportesenvivo.live",
   "description": description,
   "inLanguage": "es",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://deportesenvivo.live/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Deportes en Vivo",
+  "url": "https://deportesenvivo.live",
+  "logo": "https://deportesenvivo.live/favicon.svg",
+  "sameAs": [],
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
 };
 ---
 
@@ -55,7 +88,7 @@ const websiteJsonLd = {
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/"
   pageType="home"
-  jsonLd={websiteJsonLd}
+  jsonLd={[websiteJsonLd, organizationJsonLd, faqJsonLd]}
 >
   <div class="container">
     <!-- Hero -->
@@ -92,7 +125,7 @@ const websiteJsonLd = {
         Nuestro sistema de tres servidores garantiza que siempre tengas acceso a las mejores transmisiones disponibles. Si un servidor falla o está lento, simplemente cambia al siguiente con un clic. Todos los <strong>partidos de hoy</strong> se muestran en tiempo real con indicador de estado EN VIVO para que nunca te pierdas un momento del juego. Las horas se muestran automáticamente en tu zona horaria local.
       </p>
       <p>
-        ¿Buscas alternativas? Visita nuestras páginas de <a href="/futbol-libre">Fútbol Libre</a>, <a href="/pirlo-tv">Pirlo TV</a>, <a href="/tarjeta-roja">Tarjeta Roja</a> o <a href="/roja-directa">Roja Directa</a> para acceder a los partidos desde distintas fuentes. También puedes compartir el calendario deportivo de hoy con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> para WhatsApp y Telegram.
+        ¿Buscas alternativas? Visita nuestras páginas de <a href="/futbol-libre">Fútbol Libre</a>, <a href="/pirlo-tv">Pirlo TV</a>, <a href="/tarjeta-roja">Tarjeta Roja</a>, <a href="/roja-directa">Roja Directa</a>, <a href="/futbol-en-vivo">fútbol en vivo</a>, <a href="/partidos-en-vivo">partidos en vivo</a>, <a href="/livetv">LiveTV</a>, <a href="/tudn">TUDN</a>, <a href="/champions-league">Champions League</a>, <a href="/laliga">LaLiga</a>, <a href="/liga-mx">Liga MX</a> o <a href="/nba-en-vivo">NBA en vivo</a> para acceder a los partidos desde distintas fuentes. También puedes compartir el calendario deportivo de hoy con tus amigos usando nuestra <a href="/compartir">herramienta de compartir</a> para WhatsApp y Telegram.
       </p>
     </div>
 

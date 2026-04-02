@@ -69,6 +69,15 @@ const jsonLd = [
       { "@type": "ListItem", "position": 3, "name": teams, "item": `https://deportesenvivo.live/match/${slug}` },
     ],
   },
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": `${teams} en Vivo`,
+    "description": `Ver ${teams} en vivo hoy. ${league} en directo gratis.`,
+    "thumbnailUrl": "https://deportesenvivo.live/og-image.png",
+    "uploadDate": startIso || new Date().toISOString(),
+    "embedUrl": `https://deportesenvivo.live/embed/${slug}`,
+  },
 ];
 
 // Servers that have this match

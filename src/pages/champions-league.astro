@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Champions League en Vivo - Ver Gratis Online Hoy";
+const description = "Ver Champions League en vivo gratis hoy. UEFA Champions League en directo sin registro. Todos los partidos de Champions online.";
+const keywords = "champions league en vivo, ver champions league gratis, champions league hoy, champions league online, uefa champions league en vivo, champions league directo, ver champions league sin registro";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Dónde ver la Champions League en vivo gratis?",
+    answer: "En deportesenvivo.live puedes ver la Champions League en vivo gratis sin necesidad de suscripción. Simplemente entra al sitio, busca el partido de Champions del día y haz clic en 'Ver en vivo'. Disponible con tres servidores alternativos.",
+  },
+  {
+    question: "¿A qué hora es el partido de Champions League hoy?",
+    answer: "Los horarios de los partidos de Champions League se muestran automáticamente en tu zona horaria local en deportesenvivo.live. Los partidos de la UEFA Champions League suelen jugarse los martes y miércoles a partir de las 21:00 CET.",
+  },
+  {
+    question: "¿Qué canales transmiten la Champions League?",
+    answer: "La Champions League se emite en diferentes canales según el país: Movistar+ en España, ESPN en Latinoamérica, TNT Sports en algunos países. En deportesenvivo.live ofrecemos streams alternativos gratuitos de todos los partidos de la UCL.",
+  },
+  {
+    question: "¿Puedo ver la Champions League en el móvil gratis?",
+    answer: "Sí. deportesenvivo.live está optimizado para móviles. Abre el navegador en tu teléfono Android o iPhone, entra al sitio y selecciona el partido de Champions League que quieres ver. Sin apps, sin registro.",
+  },
+  {
+    question: "¿Cuándo son los octavos de final de Champions League?",
+    answer: "Los octavos de final de la UEFA Champions League se disputan en febrero y marzo. Los cuartos en abril, las semifinales en mayo y la gran final en junio. En deportesenvivo.live encontrarás todos los partidos de cada fase en el momento en que se jueguen.",
+  },
+  {
+    question: "¿Champions League y UEFA Champions League es lo mismo?",
+    answer: "Sí, son el mismo torneo. La UEFA Champions League (UCL) es el nombre oficial de la Champions League, la competición de clubes más importante de Europa organizada por la UEFA. En deportesenvivo.live cubrimos todos sus partidos en vivo.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/champions-league"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Champions League en Vivo</h1>
+      <p class="subtitle">Ver UEFA Champions League gratis online — partidos en directo sin registro</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Champions League en Vivo Online — La Mejor Competición Europea</h2>
+      <p>
+        La <strong>Champions League en vivo</strong> es el evento deportivo más seguido de Europa y uno de los más vistos en todo el mundo. En deportesenvivo.live ofrecemos streaming gratuito de todos los partidos de la <strong>UEFA Champions League</strong>: desde la fase de grupos hasta la gran final, con tres servidores disponibles para garantizar siempre una transmisión estable. No necesitas registrarte, ni suscribirte a ningún canal de pago.
+      </p>
+      <p>
+        Para <strong>ver la Champions League hoy</strong>, simplemente consulta la cartelera de partidos en la parte superior. Los encuentros de la UCL se muestran con su hora en tu zona horaria local y con el indicador EN VIVO cuando el partido está en curso. Si el Servidor 1 no funciona, prueba el Servidor 2 o Servidor 3 con un solo clic. Explora también <a href="/futbol-en-vivo">fútbol en vivo</a>, <a href="/laliga">LaLiga</a> o <a href="/futbol-libre">Fútbol Libre</a> para más opciones de streaming.
+      </p>
+      <p>
+        ¿Buscas <strong>ver Champions League sin registro</strong>? En deportesenvivo.live no necesitas crear ninguna cuenta ni introducir datos personales. El acceso es completamente gratuito desde cualquier dispositivo: PC, móvil o tablet.
+      </p>
+      <h3>Champions League partidos de hoy — Fase de grupos y eliminatorias</h3>
+      <p>
+        Los <strong>partidos de Champions League</strong> se disputan habitualmente los martes y miércoles durante la temporada europea. La competición reúne a los mejores clubes del continente: Real Madrid, Barcelona, Bayern Munich, Manchester City, PSG, Liverpool y mucho más. Sigue cada partido en <strong>Champions League directo</strong> en deportesenvivo.live.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras competiciones populares</h3>
+      <div class="alt-links">
+        <a href="/laliga">LaLiga</a>
+        <a href="/liga-mx">Liga MX</a>
+        <a href="/copa-libertadores">Copa Libertadores</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

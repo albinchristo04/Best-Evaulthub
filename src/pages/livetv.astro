@@ -33,6 +33,19 @@ const faqItems = [
     answer: "Si el stream de LiveTV no carga, prueba cambiando de servidor (Servidor 2 o Servidor 3). También puede ser un problema temporal del proveedor del stream. Recarga la página o vuelve en unos minutos.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -41,6 +54,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/livetv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

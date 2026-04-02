@@ -37,6 +37,19 @@ const faqItems = [
     answer: "Nuestra alternativa a Rojadirecta en vivo está completamente optimizada para móviles. Funciona en todos los smartphones Android e iPhone sin necesidad de descargar ninguna aplicación.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -45,6 +58,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/rojadirecta-en-vivo"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

@@ -34,6 +34,19 @@ const faqItems = [
     answer: "deportesenvivo.live tiene una publicidad mínima y los streams de terceros están en un iframe aislado (sandbox) que bloquea los popups agresivos del reproductor. Solo verás la publicidad razonable de nuestra plataforma.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -42,6 +55,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/tarjeta-roja-tv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

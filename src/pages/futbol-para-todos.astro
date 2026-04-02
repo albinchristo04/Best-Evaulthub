@@ -38,6 +38,19 @@ const faqItems = [
     answer: "Abre deportesenvivo.live en el navegador de tu celular (Chrome, Safari o cualquier otro). No necesitas descargar ninguna app. Funciona perfectamente en Android e iOS.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -46,6 +59,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/futbol-para-todos"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

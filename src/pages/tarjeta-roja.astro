@@ -46,6 +46,19 @@ const faqItems = [
     answer: "No son el mismo sitio, pero muchos usuarios los buscan juntos porque ambos ofrecen fútbol gratis online. En deportesenvivo.live tienes una sola plataforma que reemplaza a ambos, con tres servidores y programación actualizada cada 30 minutos.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -54,6 +67,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/tarjeta-roja"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">
@@ -99,7 +113,9 @@ const faqItems = [
         <a href="/tarjeta-roja-en-vivo">Tarjeta Roja en Vivo</a>
         <a href="/pirlo-tv">Pirlo TV</a>
         <a href="/roja-directa">Roja Directa</a>
+        <a href="/la-roja-directa">La Roja Directa</a>
         <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/tudn">TUDN</a>
         <a href="/rojadirecta-en-vivo">Rojadirecta en Vivo</a>
       </div>
     </div>

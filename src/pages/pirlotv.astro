@@ -37,6 +37,19 @@ const faqItems = [
     answer: "No. En deportesenvivo.live no necesitas crear cuenta, dar tu correo ni ningún dato personal. Simplemente abre el sitio y empieza a ver. Es completamente gratis y sin registro.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -45,6 +58,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/pirlotv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

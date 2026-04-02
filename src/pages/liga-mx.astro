@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Liga MX en Vivo - Ver Fútbol Mexicano Gratis Hoy";
+const description = "Ver Liga MX en vivo gratis hoy. Fútbol mexicano en directo sin registro. Partidos de Liga MX online gratis ahora.";
+const keywords = "liga mx en vivo, ver liga mx gratis, liga mx hoy, fútbol mexicano en vivo, liga mx online, liga mx directo, partidos liga mx hoy, liga mx en vivo gratis, clausura apertura liga mx";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Dónde ver la Liga MX en vivo gratis?",
+    answer: "En deportesenvivo.live puedes ver la Liga MX en vivo gratis sin suscripción. Entra al sitio, busca el partido de Liga MX del día y haz clic en 'Ver en vivo'. No necesitas cuenta ni pago. Disponible desde México y todo el mundo.",
+  },
+  {
+    question: "¿Qué canal transmite Liga MX en vivo?",
+    answer: "La Liga MX se transmite en TUDN, TV Azteca, Televisa y Claro Sports en México. En deportesenvivo.live ofrecemos una alternativa gratuita para seguir todos los partidos de la liga mexicana sin necesidad de cable ni suscripción de pago.",
+  },
+  {
+    question: "¿A qué hora son los partidos de Liga MX hoy?",
+    answer: "Los partidos de Liga MX se juegan principalmente los viernes, sábados y domingos. Los horarios varían entre las 19:00 y las 22:00 hora de Ciudad de México. En deportesenvivo.live los horarios se ajustan automáticamente a tu zona horaria local.",
+  },
+  {
+    question: "¿Puedo ver la Liga MX desde Estados Unidos gratis?",
+    answer: "Sí. deportesenvivo.live está disponible en Estados Unidos, México, España y toda Latinoamérica sin restricciones geográficas. Perfecta para la comunidad hispana en EE.UU. que quiere seguir el fútbol mexicano. Visita también <a href='/tudn'>TUDN en vivo</a> para más opciones.",
+  },
+  {
+    question: "¿Cuántos equipos tiene la Liga MX?",
+    answer: "La Liga MX cuenta con 18 equipos en su primera división. Los más populares son Club América, Chivas de Guadalajara, Cruz Azul, Pumas UNAM, Tigres UANL y Monterrey. La temporada se divide en torneo Apertura (julio-diciembre) y Clausura (enero-mayo).",
+  },
+  {
+    question: "¿Liga MX Clausura y Apertura, cuándo son?",
+    answer: "La Liga MX juega dos torneos por temporada: el Apertura comienza en julio y termina en diciembre con su liguilla final, y el Clausura empieza en enero y finaliza en mayo. En deportesenvivo.live cubrimos ambos torneos con todos sus partidos en vivo.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/liga-mx"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Liga MX en Vivo</h1>
+      <p class="subtitle">Ver fútbol mexicano gratis online — partidos de Liga MX en directo sin registro</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Liga MX en Vivo Online — Fútbol Mexicano Gratis</h2>
+      <p>
+        La <strong>Liga MX en vivo</strong> es la liga de fútbol más importante de México y una de las más seguidas en toda América. En deportesenvivo.live ofrecemos streaming gratuito de todos los partidos del <strong>fútbol mexicano en vivo</strong>: Apertura, Clausura y liguilla final. Sigue a Club América, Chivas, Cruz Azul, Tigres, Monterrey y todos los equipos del torneo sin pagar suscripciones.
+      </p>
+      <p>
+        Para <strong>ver Liga MX hoy</strong>, consulta la cartelera de partidos disponible arriba. Los horarios se muestran en tu zona horaria local. Cuando un partido de <strong>Liga MX directo</strong> está en curso, aparece el indicador EN VIVO en rojo. Cambia entre servidores con un clic si alguno falla. También puedes ver <a href="/tudn">TUDN en vivo</a>, <a href="/champions-league">Champions League</a> o <a href="/copa-libertadores">Copa Libertadores</a> para más fútbol.
+      </p>
+      <p>
+        ¿Estás en Estados Unidos y quieres <strong>ver la Liga MX gratis</strong>? deportesenvivo.live está disponible sin restricciones geográficas. La comunidad hispana en EE.UU. puede seguir todos los partidos de la liga mexicana en tiempo real, con horarios en su zona horaria local.
+      </p>
+      <h3>Liga MX partidos hoy — Apertura y Clausura en directo</h3>
+      <p>
+        Los <strong>partidos de Liga MX</strong> más esperados son los clásicos nacionales: América vs Chivas, el Clásico Regio entre Tigres y Monterrey, y el Clásico Capitalino entre América y Cruz Azul. Todos estos encuentros estarán disponibles en deportesenvivo.live cuando se jueguen. Sigue también la <a href="/futbol-libre">Fútbol Libre</a> y <a href="/futbol-para-todos">Fútbol Para Todos</a> para más opciones.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras competiciones populares</h3>
+      <div class="alt-links">
+        <a href="/champions-league">Champions League</a>
+        <a href="/laliga">LaLiga</a>
+        <a href="/copa-libertadores">Copa Libertadores</a>
+        <a href="/tudn">TUDN</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

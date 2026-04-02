@@ -37,6 +37,19 @@ const faqItems = [
     answer: "En deportesenvivo.live cubrimos fútbol (todas las ligas principales), NBA, MLB, NFL, UFC, tenis, boxeo y más. Es la mejor alternativa gratuita a TUDN para ver deportes en español.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -45,6 +58,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/tudn"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

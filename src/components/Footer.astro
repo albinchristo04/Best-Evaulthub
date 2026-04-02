@@ -11,6 +11,7 @@ const columns = [
       { label: 'Fútbol Libre',    href: '/futbol-libre' },
       { label: 'Fútbol Libre TV', href: '/futbol-libre-tv' },
       { label: 'Fútbol en Vivo',  href: '/futbol-en-vivo' },
+      { label: 'Fútbol Para Todos', href: '/futbol-para-todos' },
     ],
   },
   {
@@ -19,6 +20,7 @@ const columns = [
       { label: 'Pirlo TV',        href: '/pirlo-tv' },
       { label: 'Tarjeta Roja',    href: '/tarjeta-roja' },
       { label: 'Tarjeta Roja TV', href: '/tarjeta-roja-tv' },
+      { label: 'Tarjeta Roja en Vivo', href: '/tarjeta-roja-en-vivo' },
     ],
   },
   {
@@ -27,6 +29,7 @@ const columns = [
       { label: 'Roja Directa',         href: '/roja-directa' },
       { label: 'Rojadirecta TV',        href: '/rojadirecta-tv' },
       { label: 'Rojadirecta en Vivo',   href: '/rojadirecta-en-vivo' },
+      { label: 'La Roja Directa',       href: '/la-roja-directa' },
     ],
   },
   {
@@ -35,6 +38,25 @@ const columns = [
       { label: 'Partidos de Hoy',  href: '/partidos-de-hoy' },
       { label: 'Partidos en Vivo', href: '/partidos-en-vivo' },
       { label: 'LiveTV',           href: '/livetv' },
+      { label: 'TUDN',             href: '/tudn' },
+    ],
+  },
+  {
+    heading: 'Ligas',
+    links: [
+      { label: 'Champions League',   href: '/champions-league' },
+      { label: 'LaLiga',             href: '/laliga' },
+      { label: 'Liga MX',            href: '/liga-mx' },
+      { label: 'Copa Libertadores',  href: '/copa-libertadores' },
+      { label: 'NBA en Vivo',        href: '/nba-en-vivo' },
+    ],
+  },
+  {
+    heading: 'Comparativas',
+    links: [
+      { label: 'Alt. Rojadirecta',  href: '/alternativas-rojadirecta' },
+      { label: 'Alt. Pirlo TV',     href: '/alternativas-pirlo-tv' },
+      { label: 'Sobre Nosotros',    href: '/about' },
     ],
   },
 ];
@@ -130,7 +152,13 @@ const year = new Date().getFullYear();
 
   @media (min-width: 640px) {
     .footer-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .footer-grid {
+      grid-template-columns: repeat(6, 1fr);
     }
   }
 

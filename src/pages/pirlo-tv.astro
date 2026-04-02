@@ -41,6 +41,19 @@ const faqItems = [
     answer: "Muchos usuarios buscan 'pirlo tv rojadirecta' porque ambos sitios son conocidos por sus streams deportivos gratuitos. En deportesenvivo.live combinamos lo mejor de ambas fuentes con múltiples servidores y cobertura completa de fútbol y otros deportes.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -49,6 +62,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/pirlo-tv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">
@@ -96,6 +110,8 @@ const faqItems = [
         <a href="/roja-directa">Roja Directa</a>
         <a href="/rojadirecta-tv">Rojadirecta TV</a>
         <a href="/la-roja-directa">La Roja Directa</a>
+        <a href="/tudn">TUDN</a>
+        <a href="/livetv">LiveTV</a>
       </div>
     </div>
   </div>

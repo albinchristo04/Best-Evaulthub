@@ -46,6 +46,19 @@ const faqItems = [
     answer: "Directamente en deportesenvivo.live. Tienes la programación completa de fútbol libre tv hoy con todos los partidos del día, horarios en tu zona horaria y tres servidores para garantizar disponibilidad. Sin registro, sin pago.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -54,6 +67,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/futbol-libre"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">
@@ -100,6 +114,8 @@ const faqItems = [
         <a href="/futbol-en-vivo">Fútbol en Vivo</a>
         <a href="/pirlo-tv">Pirlo TV</a>
         <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/la-roja-directa">La Roja Directa</a>
+        <a href="/tudn">TUDN</a>
         <a href="/partidos-de-hoy">Partidos de Hoy</a>
       </div>
     </div>

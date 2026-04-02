@@ -34,6 +34,19 @@ const faqItems = [
     answer: "La calidad depende del servidor y tu conexión a internet. Ofrecemos tres servidores distintos para que puedas elegir el que mejor funcione en tu red. Si la imagen no es fluida, cambia de servidor con un solo clic.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -42,6 +55,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/futbol-libre-tv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

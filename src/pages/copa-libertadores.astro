@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MatchGrid from '../components/MatchGrid.astro';
+import ServerTabs from '../components/ServerTabs.astro';
+import FAQ from '../components/FAQ.astro';
+import s1Matches from '../data/s1-matches.json';
+import s2Matches from '../data/s2-matches.json';
+import s3Matches from '../data/s3-matches.json';
+
+const title = "Copa Libertadores en Vivo - Ver Gratis Online Hoy";
+const description = "Ver Copa Libertadores en vivo gratis hoy. CONMEBOL Libertadores en directo sin registro. Partidos de Copa Libertadores online.";
+const keywords = "copa libertadores en vivo, ver copa libertadores gratis, copa libertadores hoy, libertadores en directo, conmebol libertadores en vivo, copa libertadores online, libertadores partidos hoy";
+
+const filterCategory = "football";
+const filteredS1 = s1Matches.filter((m: any) => m.category === filterCategory);
+const filteredS2 = s2Matches.filter((m: any) => m.category === filterCategory);
+const filteredS3 = s3Matches.filter((m: any) => m.category === filterCategory);
+
+const faqItems = [
+  {
+    question: "¿Dónde ver la Copa Libertadores en vivo gratis?",
+    answer: "En deportesenvivo.live puedes ver la Copa Libertadores en vivo gratis sin suscripción. Entra al sitio, busca el partido de Libertadores del día y haz clic en 'Ver en vivo'. Acceso gratuito desde Argentina, Brasil, Chile, Colombia, México y todo el mundo.",
+  },
+  {
+    question: "¿Qué canal transmite la Copa Libertadores?",
+    answer: "La Copa Libertadores se transmite en ESPN, ESPN+ y Star+ en la mayoría de países latinoamericanos. En algunos países también hay señales abiertas. En deportesenvivo.live ofrecemos una alternativa gratuita para seguir todos los partidos de la Conmebol Libertadores.",
+  },
+  {
+    question: "¿Cuándo son los partidos de Copa Libertadores?",
+    answer: "La Copa Libertadores se disputa de febrero a noviembre. La fase de grupos es entre marzo y junio, los octavos y cuartos en julio-agosto, las semifinales en septiembre-octubre y la gran final en noviembre. En deportesenvivo.live encontrarás todos los partidos en vivo.",
+  },
+  {
+    question: "¿Qué equipos participan en la Copa Libertadores?",
+    answer: "La Copa Libertadores reúne a los mejores equipos de Sudamérica: River Plate, Boca Juniors, Flamengo, Palmeiras, Atlético Mineiro, Nacional, Peñarol, Colo Colo, Liga de Quito y muchos más. Son 32 equipos en fase de grupos de los países miembros de la CONMEBOL.",
+  },
+  {
+    question: "¿Puedo ver la Copa Libertadores desde España gratis?",
+    answer: "Sí. deportesenvivo.live está disponible en España, Argentina, Brasil, Chile y todo el mundo sin restricciones geográficas. La Copa Libertadores tiene mucho seguimiento entre la comunidad latinoamericana en España, y aquí puedes verla gratis.",
+  },
+  {
+    question: "¿Copa Libertadores y Copa Sudamericana son lo mismo?",
+    answer: "No. La Copa Libertadores es la competición más importante de clubes en Sudamérica (equivalente a la Champions League). La Copa Sudamericana es la segunda competición continental de la CONMEBOL (equivalente a la Europa League). En deportesenvivo.live cubrimos ambas.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/copa-libertadores"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Copa Libertadores en Vivo</h1>
+      <p class="subtitle">Ver CONMEBOL Libertadores gratis online — partidos en directo sin registro</p>
+    </div>
+
+    <ServerTabs activeServer={1} />
+
+    <div id="server-content-1">
+      <MatchGrid matches={filteredS1} serverNum={1} />
+    </div>
+    <div id="server-content-2" hidden>
+      <MatchGrid matches={filteredS2} serverNum={2} />
+    </div>
+    <div id="server-content-3" hidden>
+      <MatchGrid matches={filteredS3} serverNum={3} />
+    </div>
+
+    <div class="seo-content">
+      <h2>Ver Copa Libertadores en Vivo Online — El Torneo más Grande de América</h2>
+      <p>
+        La <strong>Copa Libertadores en vivo</strong> es la competición de clubes más importante de América del Sur y una de las más emocionantes del mundo. En deportesenvivo.live ofrecemos streaming gratuito de todos los partidos de la <strong>CONMEBOL Libertadores</strong>: desde la fase de grupos hasta la gran final, con River Plate, Boca Juniors, Flamengo, Palmeiras y los mejores clubes del continente. Sin suscripciones, sin registro.
+      </p>
+      <p>
+        Para <strong>ver la Copa Libertadores hoy</strong>, revisa la cartelera de partidos disponible arriba. Los encuentros aparecen con su hora en tu zona horaria local y el indicador EN VIVO cuando están en curso. Si el Servidor 1 tiene problemas, cambia al Servidor 2 o 3. Explora también <a href="/champions-league">Champions League</a>, <a href="/futbol-libre">Fútbol Libre</a> o <a href="/laliga">LaLiga</a> para más opciones de fútbol internacional.
+      </p>
+      <p>
+        ¿Buscas <strong>ver Libertadores gratis</strong> desde Argentina, Brasil, Chile o Colombia? deportesenvivo.live está disponible en todos los países de Latinoamérica sin restricciones geográficas. Los horarios se adaptan automáticamente a tu zona horaria para que nunca te pierdas el saque inicial.
+      </p>
+      <h3>Copa Libertadores partidos hoy — Grupos y eliminatorias</h3>
+      <p>
+        Los partidos más esperados de la <strong>Copa Libertadores</strong> son los cruces entre gigantes: River vs Flamengo, Boca vs Palmeiras, los equipos brasileños contra los argentinos en fase eliminatoria. Todos estos partidos estarán disponibles en deportesenvivo.live cuando se jueguen, con múltiples servidores para garantizar la mejor experiencia de streaming.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Otras competiciones populares</h3>
+      <div class="alt-links">
+        <a href="/champions-league">Champions League</a>
+        <a href="/laliga">LaLiga</a>
+        <a href="/liga-mx">Liga MX</a>
+        <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/futbol-para-todos">Fútbol Para Todos</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/partidos-de-hoy">Partidos de Hoy</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

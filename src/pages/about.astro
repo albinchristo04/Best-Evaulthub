@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = "Sobre Nosotros - Deportes en Vivo";
+const description = "deportesenvivo.live es un agregador de streaming deportivo en español. Conoce qué es el sitio, cómo funciona y qué deportes cubre.";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Deportes en Vivo",
+  "alternateName": "deportesenvivo.live",
+  "url": "https://deportesenvivo.live",
+  "logo": "https://deportesenvivo.live/favicon.svg",
+  "description": "Agregador gratuito de streaming deportivo en español. Fútbol, NBA, MLB y más deportes en vivo, sin registro.",
+  "foundingDate": "2024",
+  "areaServed": "ES, MX, AR, CO, CL, PE, VE, EC, BO, PY, UY, CR, GT, HN, SV, NI, PA, CU, DO, PR",
+  "knowsLanguage": "es",
+  "serviceType": "Agregador de streaming deportivo",
+};
+
+const webPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "Sobre deportesenvivo.live",
+  "url": "https://deportesenvivo.live/about",
+  "description": description,
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Deportes en Vivo",
+    "url": "https://deportesenvivo.live",
+  },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl="https://deportesenvivo.live/about"
+  pageType="hub"
+  jsonLd={[organizationJsonLd, webPageJsonLd]}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Sobre deportesenvivo.live</h1>
+      <p class="subtitle">Qué somos, cómo funcionamos y qué ofrecemos</p>
+    </div>
+
+    <div class="about-content">
+      <section>
+        <h2>¿Qué es deportesenvivo.live?</h2>
+        <p>
+          <strong>deportesenvivo.live</strong> es un agregador gratuito de streaming deportivo en español. Reunimos en un solo lugar las transmisiones en vivo de los principales deportes del mundo: fútbol, NBA, MLB, tenis, boxeo, MMA, cricket y más.
+        </p>
+        <p>
+          El sitio funciona como un directorio: buscamos y organizamos los partidos y eventos deportivos del día, y los presentamos con acceso directo a sus transmisiones. No almacenamos contenido ni hacemos streaming propio — simplemente facilitamos el acceso a streams ya disponibles en internet.
+        </p>
+      </section>
+
+      <section>
+        <h2>¿Cómo funciona?</h2>
+        <p>
+          Nuestro sistema obtiene automáticamente la programación deportiva del día desde múltiples fuentes y la actualiza cada 30 minutos. Cada partido muestra su horario en tu zona horaria local, su estado (próximo, en vivo o finalizado), y los servidores de transmisión disponibles.
+        </p>
+        <p>
+          Ofrecemos <strong>tres servidores de streaming</strong> distintos para cada partido. Si uno está lento o no disponible, puedes cambiar al siguiente con un solo clic. Así siempre tendrás al menos una opción funcionando.
+        </p>
+        <ul>
+          <li><strong>Servidor 1:</strong> Canales de televisión deportiva internacionales</li>
+          <li><strong>Servidor 2:</strong> Streams alternativos con eventos adicionales</li>
+          <li><strong>Servidor 3:</strong> Fuentes complementarias con partidos regionales</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>¿Qué deportes cubre?</h2>
+        <p>
+          deportesenvivo.live cubre una amplia variedad de deportes con especial énfasis en las competiciones más populares del mundo hispanohablante:
+        </p>
+        <ul>
+          <li><strong>Fútbol:</strong> Champions League, LaLiga, Liga MX, Copa Libertadores, Premier League, Serie A, Bundesliga, Ligue 1, selecciones nacionales</li>
+          <li><strong>Baloncesto:</strong> NBA, EuroLeague, selecciones nacionales</li>
+          <li><strong>Béisbol:</strong> MLB, Liga Mexicana</li>
+          <li><strong>Tenis:</strong> Grand Slams y torneos ATP/WTA</li>
+          <li><strong>Deportes de combate:</strong> Boxeo y MMA</li>
+          <li><strong>Otros:</strong> Fórmula 1, cricket, rugby, voleibol y más</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>¿Es gratis? ¿Necesito registrarme?</h2>
+        <p>
+          Sí, el acceso es completamente gratuito y no requiere ningún tipo de registro, cuenta ni datos personales. Simplemente entra al sitio y empieza a ver. No hay planes de pago ni contenido premium.
+        </p>
+      </section>
+
+      <section>
+        <h2>¿Es compatible con móviles?</h2>
+        <p>
+          Sí. deportesenvivo.live está diseñado para funcionar en cualquier dispositivo: ordenadores, móviles Android e iOS, tablets y Smart TVs con navegador. No necesitas instalar ninguna aplicación.
+        </p>
+      </section>
+
+      <section>
+        <h2>Aviso legal</h2>
+        <p>
+          deportesenvivo.live actúa únicamente como directorio y agregador de enlaces. No almacena, transmite ni distribuye contenido audiovisual. Todos los streams son provistos por terceros independientes. Si tienes algún reclamo relacionado con derechos de autor, contáctanos y actuaremos con diligencia.
+        </p>
+      </section>
+
+      <section>
+        <h2>Alternativas populares que indexamos</h2>
+        <p>
+          Muchos usuarios nos llegan buscando alternativas a sitios conocidos. Hemos creado páginas dedicadas para cada una:
+        </p>
+        <div class="alt-links">
+          <a href="/futbol-libre">Fútbol Libre</a>
+          <a href="/pirlo-tv">Pirlo TV</a>
+          <a href="/tarjeta-roja">Tarjeta Roja</a>
+          <a href="/roja-directa">Roja Directa</a>
+          <a href="/livetv">LiveTV</a>
+          <a href="/tudn">TUDN</a>
+          <a href="/champions-league">Champions League</a>
+          <a href="/liga-mx">Liga MX</a>
+          <a href="/nba-en-vivo">NBA en Vivo</a>
+          <a href="/alternativas-rojadirecta">Alternativas a Rojadirecta</a>
+          <a href="/alternativas-pirlo-tv">Alternativas a Pirlo TV</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-content {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .about-content section {
+    margin-bottom: 2.5rem;
+  }
+
+  .about-content h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .about-content p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-content ul {
+    color: var(--text-muted);
+    line-height: 1.8;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .alt-links a:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+</style>

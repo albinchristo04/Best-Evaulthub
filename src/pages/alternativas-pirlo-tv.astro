@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+
+const title = "Alternativas a Pirlo TV en 2026 - Los Mejores Sitios";
+const description = "Las mejores alternativas a Pirlo TV para ver deportes en vivo gratis en 2026. Comparativa de sitios como deportesenvivo.live, Tarjeta Roja, Fútbol Libre y más.";
+const keywords = "alternativas pirlo tv, alternativas a pirlo tv, pirlo tv alternativa, mejor alternativa pirlo tv, sitios como pirlo tv, webs para ver deportes gratis";
+
+const faqItems = [
+  {
+    question: "¿Cuál es la mejor alternativa a Pirlo TV en 2026?",
+    answer: "deportesenvivo.live es la mejor alternativa a Pirlo TV en 2026. Ofrece cobertura de fútbol, NBA, MLB y otros deportes con tres servidores por partido, sin registro y completamente gratis. A diferencia de Pirlo TV, tiene una interfaz en español optimizada para usuarios hispanohablantes.",
+  },
+  {
+    question: "¿Por qué buscar alternativas a Pirlo TV?",
+    answer: "Pirlo TV puede estar bloqueado por proveedores de internet en algunos países, o simplemente puede tener problemas de disponibilidad. Las alternativas como deportesenvivo.live ofrecen el mismo tipo de contenido con mayor estabilidad y mejor soporte para el público hispanohablante.",
+  },
+  {
+    question: "¿Qué sitios funcionan como Pirlo TV?",
+    answer: "Los principales sitios que funcionan como Pirlo TV son: deportesenvivo.live (la opción más completa), Rojadirecta (pionera en streaming de fútbol), Tarjeta Roja (especializada en fútbol), Fútbol Libre (enfocada en fútbol latinoamericano) y LiveTV (cobertura global).",
+  },
+  {
+    question: "¿Las alternativas a Pirlo TV son gratuitas?",
+    answer: "Sí. deportesenvivo.live y todas las alternativas listadas son completamente gratuitas y no requieren registro. Solo necesitas un navegador web en cualquier dispositivo.",
+  },
+  {
+    question: "¿Cuál alternativa a Pirlo TV es mejor para NBA?",
+    answer: "Para ver NBA en vivo gratis, deportesenvivo.live es la mejor alternativa. Cubre los partidos de temporada regular, playoffs y NBA Finals. Visita la página /nba-en-vivo para ver la programación de hoy.",
+  },
+  {
+    question: "¿Las alternativas a Pirlo TV funcionan en Smart TV?",
+    answer: "Sí. deportesenvivo.live y las demás alternativas funcionan en Smart TVs a través del navegador integrado. También puedes transmitir desde el móvil a tu TV usando Chromecast o AirPlay.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+
+const alternatives = [
+  {
+    name: "deportesenvivo.live",
+    href: "/",
+    badge: "Recomendado",
+    description: "La alternativa más completa. Fútbol, NBA, MLB y más con 3 servidores redundantes. Interfaz en español, sin registro.",
+    pros: ["3 servidores por partido", "Todos los deportes", "En español", "Sin registro"],
+    cons: ["Anuncios en página"],
+  },
+  {
+    name: "Rojadirecta",
+    href: "/roja-directa",
+    badge: "Fútbol",
+    description: "La plataforma de referencia histórica para ver fútbol. Amplía cobertura de ligas europeas.",
+    pros: ["Amplia comunidad", "Ligas europeas", "Sin registro"],
+    cons: ["Bloqueada en algunos países"],
+  },
+  {
+    name: "Tarjeta Roja",
+    href: "/tarjeta-roja",
+    badge: "Fútbol",
+    description: "Especializada en fútbol con buena cobertura de Champions League y ligas top europeas.",
+    pros: ["Especializada en fútbol", "Champions y ligas top", "Interfaz limpia"],
+    cons: ["Solo fútbol"],
+  },
+  {
+    name: "Fútbol Libre",
+    href: "/futbol-libre",
+    badge: "Latinoamérica",
+    description: "Muy popular en Latinoamérica. Excelente para Liga MX, Copa Libertadores y selecciones CONMEBOL.",
+    pros: ["Fuerte en fútbol latino", "Copa Libertadores", "Gratis"],
+    cons: ["Menos cobertura global"],
+  },
+  {
+    name: "LiveTV",
+    href: "/livetv",
+    badge: "Global",
+    description: "Directorio global de canales deportivos. Amplia cobertura de deportes minoritarios.",
+    pros: ["Cobertura muy amplia", "Deportes minoritarios", "Calendario detallado"],
+    cons: ["Interfaz en inglés/ruso"],
+  },
+  {
+    name: "TUDN",
+    href: "/tudn",
+    badge: "TV",
+    description: "El canal deportivo más popular de América Latina con cobertura de fútbol, boxeo y más.",
+    pros: ["Canal reconocido", "Fútbol latinoamericano", "Buena calidad"],
+    cons: ["Foco en contenido de TUDN"],
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/alternativas-pirlo-tv"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Alternativas a Pirlo TV en 2026</h1>
+      <p class="subtitle">Los mejores sitios para ver deportes en vivo gratis — comparativa completa</p>
+    </div>
+
+    <div class="seo-content">
+      <p>
+        ¿Buscas <strong>alternativas a Pirlo TV</strong> que funcionen en 2026? Pirlo TV es conocida por su extensa cobertura de deportes internacionales, pero existen opciones igual de buenas o mejores. Aquí tienes una comparativa de los mejores sitios para ver <strong>deportes en vivo gratis</strong> sin registro.
+      </p>
+    </div>
+
+    <div class="comparison-grid">
+      {alternatives.map((alt) => (
+        <div class="alt-card">
+          <div class="alt-card-header">
+            <a href={alt.href} class="alt-name">{alt.name}</a>
+            <span class="alt-badge">{alt.badge}</span>
+          </div>
+          <p class="alt-description">{alt.description}</p>
+          <div class="alt-pros-cons">
+            <div class="pros">
+              <span class="label">✓ Ventajas</span>
+              <ul>
+                {alt.pros.map(p => <li>{p}</li>)}
+              </ul>
+            </div>
+            <div class="cons">
+              <span class="label">− Desventajas</span>
+              <ul>
+                {alt.cons.map(c => <li>{c}</li>)}
+              </ul>
+            </div>
+          </div>
+          <a href={alt.href} class="alt-cta">Ver ahora →</a>
+        </div>
+      ))}
+    </div>
+
+    <div class="seo-content">
+      <h2>¿Qué es Pirlo TV y por qué buscar alternativas?</h2>
+      <p>
+        Pirlo TV es un directorio de canales deportivos en vivo que cubre fútbol, NBA, tenis y otros deportes internacionales. Si bien es una plataforma muy popular, puede ser bloqueada en algunos países o simplemente tener períodos de inestabilidad.
+      </p>
+      <p>
+        Las <strong>alternativas a Pirlo TV</strong> de esta lista ofrecen el mismo tipo de contenido con distintas ventajas: mejor soporte en español, más servidores por partido, o mejor cobertura de deportes específicos.
+      </p>
+      <h2>La mejor alternativa a Pirlo TV para fútbol</h2>
+      <p>
+        Para ver <strong>fútbol en vivo gratis</strong> como alternativa a Pirlo TV, deportesenvivo.live es la opción más completa. Cubre todas las grandes ligas: <a href="/champions-league">Champions League</a>, <a href="/laliga">LaLiga</a>, <a href="/liga-mx">Liga MX</a>, <a href="/copa-libertadores">Copa Libertadores</a> y más.
+      </p>
+      <h2>La mejor alternativa a Pirlo TV para NBA</h2>
+      <p>
+        Para ver <strong>NBA en vivo</strong> gratis como alternativa a Pirlo TV, visita nuestra <a href="/nba-en-vivo">página de NBA en vivo</a>. Tenemos todos los partidos de la temporada con indicador en tiempo real de qué juegos están en curso.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Más páginas relacionadas</h3>
+      <div class="alt-links">
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/pirlotv">PirloTV</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/livetv">LiveTV</a>
+        <a href="/tudn">TUDN</a>
+        <a href="/nba-en-vivo">NBA en Vivo</a>
+        <a href="/champions-league">Champions League</a>
+        <a href="/liga-mx">Liga MX</a>
+        <a href="/alternativas-rojadirecta">Alternativas a Rojadirecta</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin: 2rem 0;
+  }
+
+  @media (min-width: 640px) {
+    .comparison-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .comparison-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .alt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .alt-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .alt-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .alt-name:hover {
+    color: var(--primary);
+  }
+
+  .alt-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--primary);
+    color: #fff;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .alt-description {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .alt-pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .pros .label { color: #38b2ac; }
+  .cons .label { color: var(--text-muted); }
+
+  .alt-pros-cons ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .alt-cta {
+    display: inline-block;
+    margin-top: auto;
+    padding: 0.4rem 1rem;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.15s;
+  }
+
+  .alt-cta:hover {
+    opacity: 0.85;
+  }
+
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

@@ -1,0 +1,336 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+
+const title = "Alternativas a Rojadirecta en 2026 - Las Mejores Opciones";
+const description = "Las mejores alternativas a Rojadirecta para ver fútbol en vivo gratis en 2026. Comparativa completa de sitios como deportesenvivo.live, Pirlo TV, Tarjeta Roja y más.";
+const keywords = "alternativas rojadirecta, alternativas a rojadirecta, rojadirecta alternativa, mejor alternativa rojadirecta, sitios como rojadirecta, webs para ver fútbol gratis, alternativas a roja directa";
+
+const faqItems = [
+  {
+    question: "¿Cuál es la mejor alternativa a Rojadirecta en 2026?",
+    answer: "deportesenvivo.live es considerada una de las mejores alternativas a Rojadirecta en 2026. Ofrece partidos de fútbol en vivo, NBA, MLB y otros deportes con tres servidores redundantes, sin registro y completamente gratis. Otras buenas opciones incluyen Tarjeta Roja, Pirlo TV, Fútbol Libre y LiveTV.",
+  },
+  {
+    question: "¿Por qué necesito una alternativa a Rojadirecta?",
+    answer: "Rojadirecta ha sufrido bloqueos por parte de proveedores de internet en varios países hispanohablantes. En esos casos, necesitas una alternativa que funcione sin restricciones. deportesenvivo.live y las otras opciones de esta lista son accesibles desde cualquier país sin necesidad de VPN.",
+  },
+  {
+    question: "¿Qué sitios funcionan como Rojadirecta para ver fútbol?",
+    answer: "Los principales sitios que funcionan como Rojadirecta son: deportesenvivo.live (múltiples servidores, todos los deportes), Tarjeta Roja (especializado en fútbol), Pirlo TV (fútbol y deportes internacionales), Fútbol Libre (fútbol latinoamericano), LiveTV (cobertura global) y Roja Directa (versión alternativa).",
+  },
+  {
+    question: "¿Necesito VPN para ver las alternativas a Rojadirecta?",
+    answer: "No. deportesenvivo.live y las demás alternativas listadas aquí son accesibles directamente desde cualquier país sin necesidad de VPN. Sin embargo, si tu proveedor de internet bloquea alguna de estas páginas, una VPN gratuita puede ayudarte a acceder.",
+  },
+  {
+    question: "¿Cuál alternativa a Rojadirecta es mejor para ver Liga MX?",
+    answer: "Para ver Liga MX en vivo gratis, deportesenvivo.live y Fútbol Libre son las mejores alternativas. Ambas cubren la Liga MX con actualizaciones en tiempo real. También puedes visitar la página dedicada de Liga MX en deportesenvivo.live para encontrar todos los partidos del torneo.",
+  },
+  {
+    question: "¿Las alternativas a Rojadirecta funcionan en móvil?",
+    answer: "Sí. deportesenvivo.live y todas las alternativas listadas funcionan en móviles Android e iOS directamente desde el navegador. No necesitas instalar ninguna aplicación.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+
+const alternatives = [
+  {
+    name: "deportesenvivo.live",
+    href: "/",
+    badge: "Recomendado",
+    description: "La mejor alternativa completa. Cubre fútbol, NBA, MLB y más con 3 servidores redundantes. Sin registro, sin descargas.",
+    pros: ["3 servidores por partido", "Todos los deportes", "Actualización cada 30 min", "Sin registro"],
+    cons: ["Anuncios en página"],
+  },
+  {
+    name: "Tarjeta Roja",
+    href: "/tarjeta-roja",
+    badge: "Fútbol",
+    description: "Especializada en fútbol. Cubre las principales ligas europeas y torneos internacionales.",
+    pros: ["Especializada en fútbol", "Buena cobertura de ligas europeas", "Interfaz limpia"],
+    cons: ["Solo fútbol", "Menos deportes alternativos"],
+  },
+  {
+    name: "Pirlo TV",
+    href: "/pirlo-tv",
+    badge: "Internacional",
+    description: "Buena cobertura internacional con canales de TV deportivos de múltiples países.",
+    pros: ["Canales de TV internacionales", "Cobertura global", "Varios deportes"],
+    cons: ["Interfaz menos intuitiva"],
+  },
+  {
+    name: "Fútbol Libre",
+    href: "/futbol-libre",
+    badge: "Latinoamérica",
+    description: "Enfocada en fútbol latinoamericano. Excelente para Liga MX, Copa Libertadores y selecciones.",
+    pros: ["Fuerte en fútbol latino", "Liga MX y Libertadores", "Gratis"],
+    cons: ["Menos cobertura europea"],
+  },
+  {
+    name: "LiveTV",
+    href: "/livetv",
+    badge: "Global",
+    description: "Directorio global de canales deportivos con amplia cobertura de eventos internacionales.",
+    pros: ["Amplia cobertura global", "Muchos deportes", "Calendario detallado"],
+    cons: ["Interfaz en inglés/ruso"],
+  },
+  {
+    name: "Roja Directa",
+    href: "/roja-directa",
+    badge: "Clásico",
+    description: "Una de las alternativas más antiguas y conocidas para ver fútbol en vivo.",
+    pros: ["Reconocida por la comunidad", "Fútbol europeo", "Sin registro"],
+    cons: ["Disponibilidad variable por país"],
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalUrl="https://deportesenvivo.live/alternativas-rojadirecta"
+  pageType="hub"
+  jsonLd={faqJsonLd}
+>
+  <div class="container">
+    <div class="page-header">
+      <h1>Alternativas a Rojadirecta en 2026</h1>
+      <p class="subtitle">Los mejores sitios para ver fútbol en vivo gratis — comparativa completa</p>
+    </div>
+
+    <div class="seo-content">
+      <p>
+        ¿Buscas <strong>alternativas a Rojadirecta</strong> que funcionen en 2026? Ya sea porque tu proveedor de internet bloquea el sitio original o simplemente quieres más opciones, aquí tienes una comparativa completa de los mejores sitios para ver <strong>fútbol en vivo gratis</strong> sin registro.
+      </p>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="comparison-grid">
+      {alternatives.map((alt) => (
+        <div class="alt-card">
+          <div class="alt-card-header">
+            <a href={alt.href} class="alt-name">{alt.name}</a>
+            <span class="alt-badge">{alt.badge}</span>
+          </div>
+          <p class="alt-description">{alt.description}</p>
+          <div class="alt-pros-cons">
+            <div class="pros">
+              <span class="label">✓ Ventajas</span>
+              <ul>
+                {alt.pros.map(p => <li>{p}</li>)}
+              </ul>
+            </div>
+            <div class="cons">
+              <span class="label">− Desventajas</span>
+              <ul>
+                {alt.cons.map(c => <li>{c}</li>)}
+              </ul>
+            </div>
+          </div>
+          <a href={alt.href} class="alt-cta">Ver ahora →</a>
+        </div>
+      ))}
+    </div>
+
+    <div class="seo-content">
+      <h2>¿Por qué necesitas alternativas a Rojadirecta?</h2>
+      <p>
+        Rojadirecta fue durante años el sitio de referencia para ver <strong>fútbol en vivo gratis</strong> en español. Sin embargo, en muchos países de habla hispana ha sido bloqueado por los proveedores de internet a petición de las ligas de fútbol y los titulares de derechos televisivos.
+      </p>
+      <p>
+        Esto ha creado una demanda por <strong>alternativas a Roja Directa</strong> que funcionen sin restricciones. Los sitios de esta lista son accesibles desde España, México, Argentina, Colombia, Chile y el resto de Latinoamérica sin necesidad de VPN.
+      </p>
+      <h2>¿Qué alternativa a Rojadirecta es mejor?</h2>
+      <p>
+        La respuesta depende de tus necesidades. Si quieres la mayor cobertura posible con múltiples servidores por partido, <strong>deportesenvivo.live</strong> es la mejor opción. Si solo te interesa el fútbol europeo, <strong>Tarjeta Roja</strong> es una excelente alternativa. Para fútbol latinoamericano, <strong>Fútbol Libre</strong> es la más recomendada.
+      </p>
+      <h2>Alternativas a Rojadirecta para la Liga MX</h2>
+      <p>
+        Para ver <strong>Liga MX en vivo gratis</strong>, las mejores alternativas son deportesenvivo.live y Fútbol Libre. También puedes visitar directamente nuestra <a href="/liga-mx">página de Liga MX</a> para encontrar todos los partidos del torneo Apertura y Clausura.
+      </p>
+      <h2>Alternativas a Rojadirecta para Champions League</h2>
+      <p>
+        Para ver la <strong>UEFA Champions League en vivo</strong>, deportesenvivo.live ofrece cobertura completa de todos los partidos. Visita nuestra <a href="/champions-league">página de Champions League</a> para la programación actualizada.
+      </p>
+    </div>
+
+    <FAQ items={faqItems} />
+
+    <div class="alternatives-box">
+      <h3>Más páginas relacionadas</h3>
+      <div class="alt-links">
+        <a href="/tarjeta-roja">Tarjeta Roja</a>
+        <a href="/tarjeta-roja-tv">Tarjeta Roja TV</a>
+        <a href="/roja-directa">Roja Directa</a>
+        <a href="/rojadirecta-tv">Rojadirecta TV</a>
+        <a href="/la-roja-directa">La Roja Directa</a>
+        <a href="/pirlo-tv">Pirlo TV</a>
+        <a href="/futbol-libre">Fútbol Libre</a>
+        <a href="/livetv">LiveTV</a>
+        <a href="/champions-league">Champions League</a>
+        <a href="/liga-mx">Liga MX</a>
+        <a href="/alternativas-pirlo-tv">Alternativas a Pirlo TV</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin: 2rem 0;
+  }
+
+  @media (min-width: 640px) {
+    .comparison-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .comparison-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .alt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .alt-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .alt-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .alt-name:hover {
+    color: var(--primary);
+  }
+
+  .alt-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--primary);
+    color: #fff;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .alt-description {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .alt-pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .pros .label { color: #38b2ac; }
+  .cons .label { color: var(--text-muted); }
+
+  .alt-pros-cons ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .alt-cta {
+    display: inline-block;
+    margin-top: auto;
+    padding: 0.4rem 1rem;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.15s;
+  }
+
+  .alt-cta:hover {
+    opacity: 0.85;
+  }
+
+  .alternatives-box {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .alternatives-box h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .alt-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .alt-links a {
+    padding: 0.3rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .alt-links a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

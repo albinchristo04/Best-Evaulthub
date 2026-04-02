@@ -37,6 +37,19 @@ const faqItems = [
     answer: "Los dominios de rojadirecta tv cambian con frecuencia. deportesenvivo.live es la alternativa permanente: siempre la misma URL, siempre activa, sin necesidad de buscar el nuevo dominio de rojadirectatv cada semana.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -45,6 +58,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/rojadirecta-tv"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">

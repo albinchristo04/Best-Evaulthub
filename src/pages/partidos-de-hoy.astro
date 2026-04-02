@@ -43,6 +43,19 @@ const faqItems = [
     answer: "Directamente en deportesenvivo.live. Tienes la programación completa de juegos de hoy con fútbol, NBA, MLB y más deportes. Selecciona cualquier partido para verlo en vivo gratis sin registro.",
   },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
 
 <BaseLayout
@@ -51,6 +64,7 @@ const faqItems = [
   keywords={keywords}
   canonicalUrl="https://deportesenvivo.live/partidos-de-hoy"
   pageType="hub"
+  jsonLd={faqJsonLd}
 >
   <div class="container">
     <div class="page-header">
@@ -91,6 +105,9 @@ const faqItems = [
       <div class="alt-links">
         <a href="/partidos-en-vivo">Partidos en Vivo</a>
         <a href="/futbol-en-vivo">Fútbol en Vivo</a>
+        <a href="/champions-league">Champions League</a>
+        <a href="/liga-mx">Liga MX</a>
+        <a href="/nba-en-vivo">NBA en Vivo</a>
         <a href="/tudn">TUDN en Vivo</a>
         <a href="/futbol-libre">Fútbol Libre</a>
         <a href="/pirlo-tv">Pirlo TV</a>

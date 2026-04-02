@@ -64,6 +64,14 @@ jobs:
                 "https://deportesenvivo.live/tarjeta-roja/",
                 "https://deportesenvivo.live/partidos-de-hoy/",
                 "https://deportesenvivo.live/futbol-en-vivo/",
-                "https://deportesenvivo.live/partidos-en-vivo/"
+                "https://deportesenvivo.live/partidos-en-vivo/",
+                "https://deportesenvivo.live/champions-league/",
+                "https://deportesenvivo.live/laliga/",
+                "https://deportesenvivo.live/liga-mx/",
+                "https://deportesenvivo.live/copa-libertadores/",
+                "https://deportesenvivo.live/nba-en-vivo/",
+                "https://deportesenvivo.live/about/",
+                "https://deportesenvivo.live/alternativas-rojadirecta/",
+                "https://deportesenvivo.live/alternativas-pirlo-tv/"
               ]
             }' || true
